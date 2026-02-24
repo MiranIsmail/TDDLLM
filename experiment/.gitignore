@@ -1,0 +1,7 @@
+target/
+*.class
+
+# H2 file-based database (generated at runtime, should not be committed)
+*.db
+*.mv.db
+*.trace.db

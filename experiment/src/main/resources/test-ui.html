@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auth API — Test Console</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d0f0e;
+      --surface:   #141816;
+      --border:    #1f2421;
+      --border2:   #2a3030;
+      --green:     #3ddc84;
+      --green-dim: #1e6e42;
+      --red:       #ff5c5c;
+      --yellow:    #f0c040;
+      --text:      #c8d8cc;
+      --text-dim:  #5a7060;
+      --text-mid:  #8faa96;
+      --cursor:    #3ddc84;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    /* ── Layout ── */
+    .shell {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      grid-template-rows: 48px 1fr;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 20px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar-dots { display: flex; gap: 6px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #febc2e; }
+    .dot-g { background: #28c840; }
+    .topbar-title {
+      margin-left: 8px;
+      color: var(--text-mid);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+    }
+    .topbar-title span { color: var(--green); }
+
+    .token-badge {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+    .token-badge .label { color: var(--text-dim); }
+    .token-badge .val {
+      color: var(--green);
+      max-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .token-badge .val.empty { color: var(--text-dim); font-style: italic; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 20px 0;
+    }
+
+    .section-label {
+      padding: 4px 20px 8px;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .endpoint-card {
+      border-top: 1px solid var(--border);
+      padding: 16px 20px;
+      transition: background 0.15s;
+    }
+    .endpoint-card:last-child { border-bottom: 1px solid var(--border); }
+    .endpoint-card:hover { background: rgba(61, 220, 132, 0.03); }
+
+    .method-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .badge {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+    .badge-post { background: #1a3a25; color: var(--green); }
+    .badge-get  { background: #1a2a3a; color: #5bc0f8; }
+    .route { color: var(--text-mid); font-size: 12px; }
+
+    .field { margin-bottom: 8px; }
+    .field label {
+      display: block;
+      font-size: 10px;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      margin-bottom: 3px;
+    }
+    .field input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      color: var(--text);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      padding: 6px 8px;
+      border-radius: 3px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .field input:focus { border-color: var(--green-dim); }
+
+    .btn {
+      width: 100%;
+      margin-top: 4px;
+      padding: 7px 12px;
+      background: transparent;
+      border: 1px solid var(--green-dim);
+      color: var(--green);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .btn:hover { background: rgba(61, 220, 132, 0.08); border-color: var(--green); }
+    .btn:active { background: rgba(61, 220, 132, 0.16); }
+
+    .btn-danger {
+      border-color: #6e2020;
+      color: var(--red);
+    }
+    .btn-danger:hover { background: rgba(255, 92, 92, 0.08); border-color: var(--red); }
+
+    .auth-note {
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+    .auth-note .tok { color: var(--green); }
+
+    /* ── Log panel ── */
+    .log-panel {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .log-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--text-dim);
+      flex-shrink: 0;
+    }
+    .log-header .left { display: flex; align-items: center; gap: 10px; }
+    .blink {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green);
+      animation: blink 1.4s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+    .clear-btn {
+      background: none;
+      border: 1px solid var(--border2);
+      color: var(--text-dim);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      padding: 3px 8px;
+      cursor: pointer;
+      border-radius: 2px;
+      letter-spacing: 0.06em;
+    }
+    .clear-btn:hover { border-color: var(--text-dim); color: var(--text); }
+
+    .log-entries {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 20px;
+      scroll-behavior: smooth;
+    }
+
+    /* ── Log entry ── */
+    .entry {
+      margin-bottom: 16px;
+      animation: fadeIn 0.2s ease;
+    }
+    @keyframes fadeIn { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+
+    .entry-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+    .entry-meta .ts { color: var(--text-dim); }
+    .entry-meta .method-badge { font-size: 10px; font-weight: 600; padding: 1px 5px; border-radius: 2px; }
+    .entry-meta .ep { color: var(--text-mid); }
+
+    .status-chip {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 2px;
+      margin-left: auto;
+    }
+    .s2xx { background: #1a3a25; color: var(--green); }
+    .s4xx { background: #3a1a1a; color: var(--red); }
+    .s5xx { background: #3a2a10; color: var(--yellow); }
+    .serr { background: #2a2010; color: var(--yellow); }
+
+    .entry-req, .entry-res {
+      border-left: 2px solid var(--border2);
+      padding: 6px 10px;
+      margin-bottom: 3px;
+      font-size: 12px;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .entry-req { border-color: var(--border2); color: var(--text-mid); }
+    .entry-res { border-color: var(--green-dim); color: var(--text); }
+    .entry-res.err { border-color: #6e2020; color: var(--red); }
+
+    .entry-line-label {
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-bottom: 2px;
+      letter-spacing: 0.06em;
+    }
+
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: var(--text-dim);
+      gap: 8px;
+      font-size: 12px;
+    }
+    .empty-state .icon { font-size: 28px; opacity: 0.3; }
+    .empty-state .hint { font-size: 11px; color: var(--text-dim); opacity: 0.6; }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+  </style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="topbar-dots">
+      <div class="dot dot-r"></div>
+      <div class="dot dot-y"></div>
+      <div class="dot dot-g"></div>
+    </div>
+    <div class="topbar-title">auth-api // <span>localhost:7070</span></div>
+    <div class="token-badge">
+      <span class="label">session token →</span>
+      <span class="val empty" id="token-display">none</span>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+
+    <div class="section-label">// registration</div>
+
+    <div class="endpoint-card">
+      <div class="method-row">
+        <span class="badge badge-post">POST</span>
+        <span class="route">/api/register</span>
+      </div>
+      <div class="field">
+        <label>USERNAME</label>
+        <input id="reg-user" type="text" placeholder="alice" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label>PASSWORD</label>
+        <input id="reg-pass" type="password" placeholder="S3cur3P@ss!" />
+      </div>
+      <button class="btn" onclick="doRegister()">REGISTER</button>
+    </div>
+
+    <div class="section-label" style="margin-top:12px">// authentication</div>
+
+    <div class="endpoint-card">
+      <div class="method-row">
+        <span class="badge badge-post">POST</span>
+        <span class="route">/api/login</span>
+      </div>
+      <div class="field">
+        <label>USERNAME</label>
+        <input id="login-user" type="text" placeholder="alice" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label>PASSWORD</label>
+        <input id="login-pass" type="password" placeholder="S3cur3P@ss!" />
+      </div>
+      <button class="btn" onclick="doLogin()">LOGIN → GET TOKEN</button>
+    </div>
+
+    <div class="section-label" style="margin-top:12px">// protected routes</div>
+
+    <div class="endpoint-card">
+      <div class="method-row">
+        <span class="badge badge-get">GET</span>
+        <span class="route">/api/profile</span>
+      </div>
+      <div class="auth-note">uses stored token → <span class="tok" id="token-short">none</span></div>
+      <button class="btn" onclick="doProfile()">GET PROFILE</button>
+    </div>
+
+    <div class="endpoint-card">
+      <div class="method-row">
+        <span class="badge badge-post">POST</span>
+        <span class="route">/api/logout</span>
+      </div>
+      <div class="auth-note">uses stored token → <span class="tok" id="token-short2">none</span></div>
+      <button class="btn btn-danger" onclick="doLogout()">LOGOUT → CLEAR TOKEN</button>
+    </div>
+
+  </aside>
+
+  <!-- Log panel -->
+  <main class="log-panel">
+    <div class="log-header">
+      <div class="left">
+        <div class="blink"></div>
+        <span>REQUEST LOG</span>
+      </div>
+      <button class="clear-btn" onclick="clearLog()">CLEAR</button>
+    </div>
+    <div class="log-entries" id="log">
+      <div class="empty-state" id="empty-state">
+        <div class="icon">⬡</div>
+        <div>no requests yet</div>
+        <div class="hint">use the panel on the left to send requests</div>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<script>
+  let token = null;
+
+  function setToken(t) {
+    token = t;
+    const disp = document.getElementById('token-display');
+    const s1   = document.getElementById('token-short');
+    const s2   = document.getElementById('token-short2');
+    if (t) {
+      const short = t.length > 16 ? t.slice(0, 16) + '…' : t;
+      disp.textContent = t;
+      disp.classList.remove('empty');
+      s1.textContent = short;
+      s2.textContent = short;
+    } else {
+      disp.textContent = 'none';
+      disp.classList.add('empty');
+      s1.textContent = 'none';
+      s2.textContent = 'none';
+    }
+  }
+
+  function clearLog() {
+    document.getElementById('log').innerHTML =
+      '<div class="empty-state" id="empty-state">' +
+        '<div class="icon">⬡</div>' +
+        '<div>no requests yet</div>' +
+        '<div class="hint">use the panel on the left to send requests</div>' +
+      '</div>';
+  }
+
+  function timestamp() {
+    return new Date().toLocaleTimeString('en-GB', { hour12: false });
+  }
+
+  function statusClass(code) {
+    if (!code) return 'serr';
+    if (code >= 200 && code < 300) return 's2xx';
+    if (code >= 400 && code < 500) return 's4xx';
+    return 's5xx';
+  }
+
+  function logEntry(method, endpoint, reqBody, status, resBody) {
+    const es = document.getElementById('empty-state');
+    if (es) es.remove();
+
+    const log = document.getElementById('log');
+    const div = document.createElement('div');
+    div.className = 'entry';
+
+    const reqStr  = reqBody ? JSON.stringify(reqBody, null, 2) : '(no body)';
+    const resStr  = typeof resBody === 'object' ? JSON.stringify(resBody, null, 2) : resBody;
+    const isErr   = !status || status >= 400;
+    const sc      = statusClass(status);
+    const statusLabel = status ? `${status}` : 'ERR';
+
+    div.innerHTML = `
+      <div class="entry-meta">
+        <span class="ts">${timestamp()}</span>
+        <span class="method-badge badge ${method === 'GET' ? 'badge-get' : 'badge-post'}">${method}</span>
+        <span class="ep">${endpoint}</span>
+        <span class="status-chip ${sc}">${statusLabel}</span>
+      </div>
+      ${reqBody !== null ? `
+        <div class="entry-line-label">REQUEST BODY</div>
+        <div class="entry-req">${escHtml(reqStr)}</div>
+      ` : ''}
+      <div class="entry-line-label">RESPONSE</div>
+      <div class="entry-res ${isErr ? 'err' : ''}">${escHtml(resStr)}</div>
+    `;
+    log.appendChild(div);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  async function request(method, endpoint, body, authToken) {
+    const headers = { 'Content-Type': 'application/json' };
+    if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+
+    try {
+      const res = await fetch(endpoint, {
+        method,
+        headers,
+        body: body ? JSON.stringify(body) : undefined
+      });
+      let data;
+      try { data = await res.json(); } catch { data = { raw: await res.text() }; }
+      logEntry(method, endpoint, body ?? null, res.status, data);
+      return { status: res.status, data };
+    } catch (err) {
+      logEntry(method, endpoint, body ?? null, null, `Network error: ${err.message}`);
+      return { status: null, data: null };
+    }
+  }
+
+  async function doRegister() {
+    const username = document.getElementById('reg-user').value.trim();
+    const password = document.getElementById('reg-pass').value;
+    await request('POST', '/api/register', { username, password });
+  }
+
+  async function doLogin() {
+    const username = document.getElementById('login-user').value.trim();
+    const password = document.getElementById('login-pass').value;
+    const { data } = await request('POST', '/api/login', { username, password });
+    if (data && data.token) setToken(data.token);
+  }
+
+  async function doProfile() {
+    await request('GET', '/api/profile', null, token);
+  }
+
+  async function doLogout() {
+    await request('POST', '/api/logout', null, token);
+    setToken(null);
+  }
+
+  // Allow Enter key in input fields
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    const id = document.activeElement?.id;
+    if (id === 'reg-user' || id === 'reg-pass') doRegister();
+    if (id === 'login-user' || id === 'login-pass') doLogin();
+  });
+</script>
+</body>
+</html>
