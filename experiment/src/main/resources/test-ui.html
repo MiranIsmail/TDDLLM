@@ -65,8 +65,22 @@
     }
     .topbar-title span { color: var(--green); }
 
+    /* Nav Link Styling - Adjusted for Right Alignment */
+    .nav-link {
+      color: var(--green);
+      text-decoration: none;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      padding: 4px 10px;
+      border: 1px solid var(--green-dim);
+      border-radius: 3px;
+      transition: all 0.2s;
+      margin-right: 16px;
+      white-space: nowrap;
+    }
+    .nav-link:hover { background: rgba(61, 220, 132, 0.1); border-color: var(--green); }
+
     .token-badge {
-      margin-left: auto;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -286,7 +300,6 @@
     .empty-state .icon { font-size: 28px; opacity: 0.3; }
     .empty-state .hint { font-size: 11px; color: var(--text-dim); opacity: 0.6; }
 
-    /* scrollbar */
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
@@ -295,21 +308,20 @@
 <body>
 <div class="shell">
 
-  <!-- Top bar -->
   <header class="topbar">
     <div class="topbar-dots">
       <div class="dot dot-r"></div>
       <div class="dot dot-y"></div>
       <div class="dot dot-g"></div>
     </div>
-    <div class="topbar-title">auth-api // <span>localhost:7070</span></div>
-    <div class="token-badge">
-      <span class="label">session token →</span>
-      <span class="val empty" id="token-display">none</span>
-    </div>
+    <div class="topbar-title">auth-api // <span>localhost:8080</span></div>
+
+    <div style="flex: 1;"></div>
+
+    <a href="/logs" class="nav-link">VIEW SYSTEM LOGS →</a>
+
   </header>
 
-  <!-- Sidebar -->
   <aside class="sidebar">
 
     <div class="section-label">// registration</div>
@@ -370,14 +382,13 @@
 
   </aside>
 
-  <!-- Log panel -->
   <main class="log-panel">
     <div class="log-header">
       <div class="left">
         <div class="blink"></div>
-        <span>REQUEST LOG</span>
+        <span>SESSION LOG (CURRENT)</span>
       </div>
-      <button class="clear-btn" onclick="clearLog()">CLEAR</button>
+      <button class="clear-btn" onclick="clearLog()">CLEAR UI</button>
     </div>
     <div class="log-entries" id="log">
       <div class="empty-state" id="empty-state">
@@ -414,11 +425,11 @@
 
   function clearLog() {
     document.getElementById('log').innerHTML =
-      '<div class="empty-state" id="empty-state">' +
-        '<div class="icon">⬡</div>' +
-        '<div>no requests yet</div>' +
-        '<div class="hint">use the panel on the left to send requests</div>' +
-      '</div>';
+            '<div class="empty-state" id="empty-state">' +
+            '<div class="icon">⬡</div>' +
+            '<div>no requests yet</div>' +
+            '<div class="hint">use the panel on the left to send requests</div>' +
+            '</div>';
   }
 
   function timestamp() {
@@ -478,11 +489,39 @@
         headers,
         body: body ? JSON.stringify(body) : undefined
       });
+
+      // 1. READ THE BODY ONLY ONCE
       let data;
-      try { data = await res.json(); } catch { data = { raw: await res.text() }; }
+      const contentType = res.headers.get("content-type");
+
+      if (contentType && contentType.includes("application/json")) {
+        data = await res.json();
+      } else {
+        data = { raw: await res.text() };
+      }
+
+      // 2. LOG TO UI (Using the variable 'data')
       logEntry(method, endpoint, body ?? null, res.status, data);
+
+      // 3. LOG TO SERVER (Using the same 'data' variable)
+      // We use a background fetch so it doesn't block the UI
+      fetch('/api/internal/logs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          timestamp: timestamp(),
+          method: method,
+          endpoint: endpoint,
+          status: res.status,
+          requestBody: JSON.stringify(body || {}),
+          responseBody: JSON.stringify(data)
+        })
+      }).catch(err => console.error("Persistence failed:", err));
+
       return { status: res.status, data };
+
     } catch (err) {
+      // Handle Network Errors (like the server being down)
       logEntry(method, endpoint, body ?? null, null, `Network error: ${err.message}`);
       return { status: null, data: null };
     }
@@ -510,7 +549,6 @@
     setToken(null);
   }
 
-  // Allow Enter key in input fields
   document.addEventListener('keydown', e => {
     if (e.key !== 'Enter') return;
     const id = document.activeElement?.id;
