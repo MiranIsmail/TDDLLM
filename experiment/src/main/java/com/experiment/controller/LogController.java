@@ -67,4 +67,17 @@ public class LogController {
             }
         }
     }
+    public void addInternal(String method, String endpoint, String responseBody) {
+        // 1. Generate the timestamp matching your UI format (HH:mm:ss)
+        String timestamp = java.time.LocalTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss"));
+
+        // 2. Create the LogEntry object (Assuming your model has this constructor)
+        // Passing "200" for status and "User Interacted" as the request body
+        LogEntry entry = new LogEntry(timestamp, method, endpoint, 200, "User Interacted", responseBody);
+
+        // 3. Add to the list and save to the physical JSON file
+        logHistory.add(entry);
+        saveLogsToFile();
+
+    }
 }

@@ -2,6 +2,7 @@ package com.experiment;
 
 import com.experiment.controller.AuthController;
 import com.experiment.controller.LogController; // Import this
+import com.experiment.controller.UserButtonController;
 import com.experiment.repository.SessionRepository;
 import com.experiment.repository.UserRepository;
 import com.experiment.service.AuthService;
@@ -40,7 +41,16 @@ public class App {
         // 2. Add route for the Log Page
         app.get("/logs", ctx -> serveStatic(ctx, "/log.html"));
 
+        // 3. Register the Start/Stop routes
+        UserButtonController userButtonController = new UserButtonController(logController);
+        app.post("/api/start", userButtonController::handleStart);
+        app.post("/api/stop", userButtonController::handleStop);
+        app.get("/api/user/data", userButtonController::handleLoad);
+
         // --- API ROUTES ---
+        app.get("/admin", ctx -> serveStatic(ctx, "/admin_page.html"));
+        app.get("/user", ctx -> serveStatic(ctx, "/user_page.html"));
+        app.get("/login", ctx -> serveStatic(ctx, "/login.html"));
 
         controller.registerRoutes(app);
 
