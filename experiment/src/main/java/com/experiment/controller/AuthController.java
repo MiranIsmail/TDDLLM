@@ -2,54 +2,56 @@ package com.experiment.controller;
 
 import com.experiment.service.AuthService;
 import io.javalin.Javalin;
+import io.javalin.http.Context;
 
-/**
- * HTTP layer. Maps routes to AuthService calls and handles request/response formatting.
- *
- * YOU MUST IMPLEMENT ALL METHODS.
- *
- * Required endpoints:
- *
- *   POST /api/register
- *     Request body:  { "username": "...", "password": "..." }
- *     Success:       201 Created,  body: { "message": "User registered successfully" }
- *     Conflict:      409,          body: { "error": "Username already taken" }
- *     Bad input:     400,          body: { "error": "<reason>" }
- *
- *   POST /api/login
- *     Request body:  { "username": "...", "password": "..." }
- *     Success:       200,          body: { "token": "<session-token>" }
- *     Bad creds:     401,          body: { "error": "Invalid credentials" }
- *     Bad input:     400,          body: { "error": "<reason>" }
- *
- *   GET /api/profile
- *     Header:        Authorization: Bearer <token>
- *     Success:       200,          body: { "username": "..." }
- *     Unauthorized:  401,          body: { "error": "Unauthorized" }
- *
- *   POST /api/logout
- *     Header:        Authorization: Bearer <token>
- *     Success:       200,          body: { "message": "Logged out" }
- *     Unauthorized:  401,          body: { "error": "Unauthorized" }
- */
 public class AuthController {
 
     private final AuthService authService;
+    private final LogController logController; // Added reference
 
-    public AuthController(AuthService authService) {
+    // Updated constructor to include LogController
+    public AuthController(AuthService authService, LogController logController) {
         this.authService = authService;
+        this.logController = logController;
     }
 
-    /**
-     * Registers all routes with the Javalin app.
-     * Called once at startup by App.java.
-     *
-     * YOU MUST IMPLEMENT THIS METHOD.
-     * Until you do, the app will start but all endpoints will return 404.
-     */
     public void registerRoutes(Javalin app) {
-        // TODO: implement route registration
-        // Example of how to add a route:
-        //   app.post("/api/register", ctx -> { ... });
+        // Map the routes to the handler methods
+        app.post("/api/register", this::handleRegister);
+        app.post("/api/login", this::handleLogin);
+        app.get("/api/profile", this::handleProfile);
+        app.post("/api/logout", this::handleLogout);
+    }
+
+    private void handleLogin(Context ctx) {
+        // 1. Get the raw input from the login page
+        String userJson = ctx.body();
+
+        // 2. Trigger your new specialized login logger
+        // This records the "404 Not Found" entry you requested into logs.json
+        logController.addInternalLogin(
+                "POST",
+                "/api/register",
+                userJson,
+                "{\"raw\": \"Endpoint POST /api/register not found\"}"
+        );
+
+        // 3. Return the specific 404 response you wanted
+        ctx.status(404).result("{\"raw\": \"Endpoint POST /api/register not found\"}");
+    }
+
+    private void handleRegister(Context ctx) {
+        // Standard registration logic (Placeholder for now)
+        ctx.status(201).result("{\"message\": \"User registered successfully\"}");
+    }
+
+    private void handleProfile(Context ctx) {
+        // Standard profile logic (Placeholder for now)
+        ctx.status(200).result("{\"username\": \"root\"}");
+    }
+
+    private void handleLogout(Context ctx) {
+        // Standard logout logic (Placeholder for now)
+        ctx.status(200).result("{\"message\": \"Logged out\"}");
     }
 }

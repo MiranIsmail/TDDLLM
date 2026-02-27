@@ -20,14 +20,13 @@ public class App {
     }
 
     public static Javalin createApp(boolean testMode) {
+        LogController logController = new LogController();
         Database db               = new Database(testMode);
         UserRepository userRepo   = new UserRepository(db);
         SessionRepository sessRepo = new SessionRepository(db);
         AuthService authService   = new AuthService(userRepo, sessRepo);
-        AuthController controller = new AuthController(authService);
+        AuthController controller = new AuthController(authService, logController);
 
-        // 1. Initialize the new LogController
-        LogController logController = new LogController();
 
         Javalin app = Javalin.create(config -> {
             config.useVirtualThreads = true;

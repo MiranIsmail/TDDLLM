@@ -67,7 +67,7 @@ public class LogController {
             }
         }
     }
-    public void addInternal(String method, String endpoint, String responseBody) {
+    public void addInternalTime(String method, String endpoint, String responseBody) {
         // 1. Generate the timestamp matching your UI format (HH:mm:ss)
         String timestamp = java.time.LocalTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss"));
 
@@ -79,5 +79,11 @@ public class LogController {
         logHistory.add(entry);
         saveLogsToFile();
 
+    }
+    public void addInternalLogin(String method, String endpoint, String requestBody, String responseBody) {
+        String timestamp = java.time.LocalTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss"));
+        LogEntry entry = new LogEntry(timestamp, method, endpoint, 404, requestBody, responseBody);
+        logHistory.add(entry);
+        saveLogsToFile();
     }
 }

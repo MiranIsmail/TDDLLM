@@ -14,16 +14,16 @@ public class UserButtonController {
     }
 
     public void handleStart(Context ctx) {
-        logController.addInternal("START_ACTION", "/api/start", "Start button pressed");
+        logController.addInternalTime("START_ACTION", "/api/start", "Start button pressed");
         ctx.status(200).result("Started successfully");
     }
 
     public void handleStop(Context ctx) {
-        logController.addInternal("STOP_ACTION", "/api/stop", "Stop button pressed");
+        logController.addInternalTime("STOP_ACTION", "/api/stop", "Stop button pressed");
         ctx.status(200).result("Stopped successfully");
     }
     public void handleLoad(Context ctx) {
-        logController.addInternal("PAGE_LOAD", "/api/user/data", "Fetched session data");
+        logController.addInternalTime("PAGE_LOAD", "/api/user/data", "Fetched session data");
 
         String example_data = """
         [

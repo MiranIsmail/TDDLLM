@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Terminal Nav Template</title>
+    <title>Terminal Login</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
     <style>
@@ -13,82 +13,133 @@
             --bg:        #0d0f0e;
             --surface:   #141816;
             --border:    #1f2421;
+            --border-focus: #2a3030;
             --accent:    #3ddc84;
             --accent-dim: #1e6e42;
             --text-mid:  #8faa96;
+            --text-main: #c8d8cc;
         }
 
         body {
             background: var(--bg);
             font-family: 'IBM Plex Mono', monospace;
-        }
-
-        /* ── Top Navigation Bar ── */
-        .topbar {
+            height: 100vh;
             display: flex;
             align-items: center;
-            height: 48px;
-            padding: 0 20px;
+            justify-content: center;
+            color: var(--text-main);
+        }
+
+        .login-card {
             background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
+            border: 1px solid var(--border);
+            padding: 32px;
+            width: 100%;
+            max-width: 360px;
+            border-radius: 4px;
         }
 
-        .topbar-dots {
-            display: flex;
-            gap: 6px;
-            margin-right: 15px;
-        }
-
-        .dot { width: 10px; height: 10px; border-radius: 50%; }
-        .dot-r { background: #ff5f57; }
-        .dot-y { background: #febc2e; }
-        .dot-g { background: #28c840; }
-
-        .topbar-title {
+        .login-header {
+            margin-bottom: 24px;
+            font-size: 12px;
+            letter-spacing: 0.15em;
             color: var(--text-mid);
-            font-size: 11px;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+        }
+
+        .login-header span {
+            color: var(--accent);
+        }
+
+        .field {
+            margin-bottom: 16px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 10px;
+            color: var(--text-mid);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .field input {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 13px;
+            padding: 10px 12px;
+            border-radius: 3px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .field input:focus {
+            border-color: var(--accent-dim);
+        }
+
+        .btn-login {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--accent-dim);
+            color: var(--accent);
+            padding: 12px;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-        }
-
-        .topbar-title span { color: var(--accent); }
-
-        .nav-link {
-            color: var(--accent);
-            text-decoration: none;
-            font-size: 10px;
-            letter-spacing: 0.1em;
-            padding: 4px 10px;
-            border: 1px solid var(--accent-dim);
-            border-radius: 3px;
+            cursor: pointer;
             transition: all 0.2s;
-            margin-left: auto; /* Pushes to the right */
+            margin-top: 8px;
         }
 
-        .nav-link:hover {
-            background: rgba(61, 220, 132, 0.1);
+        .btn-login:hover {
+            background: rgba(61, 220, 132, 0.05);
             border-color: var(--accent);
+        }
+
+        .btn-login:active {
+            background: rgba(61, 220, 132, 0.1);
         }
     </style>
 </head>
 <body>
 
-<header class="topbar">
-    <div class="topbar-dots">
-        <div class="dot dot-r"></div>
-        <div class="dot dot-y"></div>
-        <div class="dot dot-g"></div>
+<div class="login-card">
+    <div class="login-header">
+        Auth // <span>Gatekeeper</span>
     </div>
 
-    <div class="topbar-title">SYSTEM // <span>TERMINAL_v1.0</span></div>
+    <div class="field">
+        <label for="username">User ID</label>
+        <input type="text" id="username" autocomplete="off" placeholder="root">
+    </div>
 
-    <a href="#" class="nav-link">ACTION_LOG →</a>
-</header>
+    <div class="field">
+        <label for="password">Security Key</label>
+        <input type="password" id="password" placeholder="••••••••">
+    </div>
 
+<button class="btn-login" onclick="sendToController()">Login</button>
+</div>
+<script>
+    async function sendToController() {
+        const user = document.getElementById('username').value;
+        const pass = document.getElementById('password').value;
+
+        // Just send the data, no login logic here
+        await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: user, password: pass })
+        });
+    }
+</script>
 </body>
 </html>
