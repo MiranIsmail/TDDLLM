@@ -2,7 +2,7 @@ package com.experiment.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
+// Helper class do not modify
 public record LogEntry(
         String timestamp,
         String method,

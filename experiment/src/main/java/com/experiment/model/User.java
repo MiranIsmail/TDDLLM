@@ -7,13 +7,23 @@ public class User {
     private int id;
     private String username;
     private String password; // stored as hash
+    private Levels role;
 
     public User() {}
 
-    public User(int id, String username, String password) {
+    public User(int id, String username, String password, Levels role) {
         this.id = id;
         this.username = username;
         this.password = password;
+        this.role = role;
+    }
+
+    public Levels getRole() {
+        return role;
+    }
+
+    public void setRole(Levels role) {
+        this.role = role;
     }
 
     public int getId()           { return id; }
