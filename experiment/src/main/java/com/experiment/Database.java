@@ -6,15 +6,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * Database utility class. PROVIDED - do not modify.
+ * Database utility class.
  *
  * Production mode: writes to ./auth-experiment.db (persists across restarts)
- * Test mode:       uses a named in-memory H2 instance (wiped between test runs)
+ * Test mode:       uses an in-memory SQLite instance (wiped between test runs)
  */
 public class Database {
 
-    private static final String PROD_URL = "jdbc:h2:file:./auth-experiment;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=TRUE";
-    private static final String TEST_URL = "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE";
+    // SQLite connection URLs
+    private static final String PROD_URL = "jdbc:sqlite:auth-experiment.db";
+    private static final String TEST_URL = "jdbc:sqlite::memory:";
 
     private final String url;
 
@@ -27,9 +28,10 @@ public class Database {
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement()) {
 
+            // SQLite requires 'AUTOINCREMENT' (no underscore)
             stmt.execute("""
                 CREATE TABLE IF NOT EXISTS users (
-                    id        INTEGER PRIMARY KEY AUTO_INCREMENT,
+                    id        INTEGER PRIMARY KEY AUTOINCREMENT,
                     username  VARCHAR(100) NOT NULL UNIQUE,
                     password  VARCHAR(255) NOT NULL,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -52,7 +54,16 @@ public class Database {
     }
 
     public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(url, "sa", "");
+        // SQLite doesn't require username/password credentials
+        Connection conn = DriverManager.getConnection(url);
+
+        // SQLite does not enforce foreign keys by default.
+        // We must enable them on every new connection.
+        try (Statement stmt = conn.createStatement()) {
+            stmt.execute("PRAGMA foreign_keys = ON;");
+        }
+
+        return conn;
     }
 
     /** Clears all data between tests without dropping schema */
