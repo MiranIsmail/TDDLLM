@@ -1,6 +1,7 @@
 package com.experiment.repository;
 
 import com.experiment.Database;
+import com.experiment.controller.LogController;
 import com.experiment.model.Session;
 
 import java.util.Optional;
@@ -13,9 +14,11 @@ import java.util.Optional;
 public class SessionRepository {
 
     private final Database db;
+    private final LogController logController; // Used to log what happens
 
-    public SessionRepository(Database db) {
+    public SessionRepository(Database db,LogController logController) {
         this.db = db;
+        this.logController =logController;
     }
 
     /**

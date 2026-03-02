@@ -7,9 +7,8 @@ import io.javalin.http.Context;
 public class AuthController {
 
     private final AuthService authService;
-    private final LogController logController; // Added reference
+    private final LogController logController; // Used to log what happens
 
-    // Updated constructor to include LogController
     public AuthController(AuthService authService, LogController logController) {
         this.authService = authService;
         this.logController = logController;
@@ -23,12 +22,14 @@ public class AuthController {
         app.post("/api/logout", this::handleLogout);
     }
 
+    private void handleRegister(Context ctx) {
+        // Standard registration logic (Placeholder for now)
+        LogController.getInstance().log("New user registered:");//example on how to use the logger
+        ctx.status(201).result("{\"message\": \"User registered successfully\"}");
+    }
     private void handleLogin(Context ctx) {
-        // 1. Get the raw input from the login page
         String userJson = ctx.body();
 
-        // 2. Trigger your new specialized login logger
-        // This records the "404 Not Found" entry you requested into logs.json
         logController.addInternalLogin(
                 "POST",
                 "/api/register",
@@ -36,14 +37,9 @@ public class AuthController {
                 "{\"raw\": \"Endpoint POST /api/register not found\"}"
         );
 
-        // 3. Return the specific 404 response you wanted
         ctx.status(404).result("{\"raw\": \"Endpoint POST /api/register not found\"}");
     }
 
-    private void handleRegister(Context ctx) {
-        // Standard registration logic (Placeholder for now)
-        ctx.status(201).result("{\"message\": \"User registered successfully\"}");
-    }
 
     private void handleProfile(Context ctx) {
         // Standard profile logic (Placeholder for now)

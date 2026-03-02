@@ -1,12 +1,12 @@
 package com.experiment.model;
 
 /**
- * Represents a user in the system. PROVIDED - do not modify.
+ * Represents a user in the system. - do not modify.
  */
 public class User {
     private int id;
     private String username;
-    private String password; // stored as hash
+    private String password;
     private Levels role;
 
     public User() {}

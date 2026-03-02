@@ -1,5 +1,6 @@
 package com.experiment.service;
 
+import com.experiment.controller.LogController;
 import com.experiment.model.Session;
 import com.experiment.model.User;
 import com.experiment.repository.SessionRepository;
@@ -17,10 +18,12 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final SessionRepository sessionRepository;
+    private final LogController logController; // Used to log what happens
 
-    public AuthService(UserRepository userRepository, SessionRepository sessionRepository) {
+    public AuthService(UserRepository userRepository, SessionRepository sessionRepository, LogController logController) {
         this.userRepository = userRepository;
         this.sessionRepository = sessionRepository;
+        this.logController = logController;
     }
 
     /**
@@ -33,6 +36,7 @@ public class AuthService {
      */
     public void register(String username, String password) {
         // TODO: validate inputs, hash the password with BCrypt, call userRepository.save()
+        logController.log("Here we log what happens like this");
     }
 
     /**

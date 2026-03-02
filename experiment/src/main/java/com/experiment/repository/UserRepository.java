@@ -1,6 +1,7 @@
 package com.experiment.repository;
 
 import com.experiment.Database;
+import com.experiment.controller.LogController;
 import com.experiment.model.User;
 
 import java.util.Optional;
@@ -14,9 +15,12 @@ import java.util.Optional;
 public class UserRepository {
 
     private final Database db;
+    private final LogController logController; // Used to log what happens
 
-    public UserRepository(Database db) {
+
+    public UserRepository(Database db,LogController logController) {
         this.db = db;
+        this.logController = logController;
     }
 
     /**
@@ -28,6 +32,7 @@ public class UserRepository {
      */
     public void save(String username, String hashedPassword) {
         // TODO: implement — INSERT INTO users (username, password) VALUES (?, ?)
+        logController.log("Database: this is how we log");
     }
 
     /**

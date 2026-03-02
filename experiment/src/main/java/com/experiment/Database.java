@@ -10,6 +10,7 @@ import java.sql.Statement;
  *
  * Production mode: writes to ./auth-experiment.db (persists across restarts)
  * Test mode:       uses an in-memory SQLite instance (wiped between test runs)
+ * You can change the mode in App.java
  */
 public class Database {
 
@@ -63,7 +64,6 @@ public class Database {
     }
 
     public Connection getConnection() throws SQLException {
-        // SQLite doesn't require username/password credentials
         Connection conn = DriverManager.getConnection(url);
 
         // SQLite does not enforce foreign keys by default.
