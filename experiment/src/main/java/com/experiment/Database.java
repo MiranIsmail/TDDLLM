@@ -47,7 +47,14 @@ public class Database {
                     FOREIGN KEY (user_id) REFERENCES users(id)
                 )
             """);
-
+            stmt.execute("""
+                CREATE TABLE IF NOT EXISTS data (
+                    user_id    INTEGER NOT NULL,
+                    start_time TIMESTAMP NOT NULL,
+                    end_time TIMESTAMP NOT NULL,
+                    FOREIGN KEY (user_id) REFERENCES users(id)
+                )
+            """);
         } catch (SQLException e) {
             throw new RuntimeException("Failed to initialize database", e);
         }
@@ -72,6 +79,7 @@ public class Database {
              Statement stmt = conn.createStatement()) {
             stmt.execute("DELETE FROM sessions");
             stmt.execute("DELETE FROM users");
+            stmt.execute("DELETE FROM data");
         } catch (SQLException e) {
             throw new RuntimeException("Failed to clear database", e);
         }
