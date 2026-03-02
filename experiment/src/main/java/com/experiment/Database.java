@@ -34,6 +34,7 @@ public class Database {
                     id        INTEGER PRIMARY KEY AUTOINCREMENT,
                     username  VARCHAR(100) NOT NULL UNIQUE,
                     password  VARCHAR(255) NOT NULL,
+                    user_role  VARCHAR(32) NOT NULL DEFAULT 'USER',                    
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             """);

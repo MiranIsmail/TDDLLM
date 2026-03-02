@@ -40,7 +40,7 @@ public class App {
         app.post("/api/admin/override", adminController::handleOverride);
 
         // Root Console
-        app.get("/", ctx -> serveStatic(ctx, "/test-ui.html"));
+        app.get("/", ctx -> serveStatic(ctx, "/login.html"));
 
         // 2. Add route for the Log Page
         app.get("/logs", ctx -> serveStatic(ctx, "/log.html"));
