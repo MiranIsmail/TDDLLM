@@ -53,7 +53,7 @@ public class Database {
                 CREATE TABLE IF NOT EXISTS data (
                     user_id    INTEGER NOT NULL,
                     start_time TIMESTAMP NOT NULL,
-                    end_time TIMESTAMP NOT NULL,
+                    end_time TIMESTAMP,
                     FOREIGN KEY (user_id) REFERENCES users(id)
                 )
             """);

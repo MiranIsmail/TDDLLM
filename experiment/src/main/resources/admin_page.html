@@ -114,7 +114,7 @@
     </nav>
 </div>
 
-[Image of a web-based administrative dashboard with a dark terminal aesthetic and expandable table rows]
+
 
 <script>
     let userData = [];
@@ -130,19 +130,26 @@
     function renderTable(dataToRender) {
         const body = document.getElementById('admin-table-body');
         body.innerHTML = dataToRender.map((user) => {
-            const latest = user.sessions[0] || { start_time: "--", end_time: "--" };
-            const isActive = latest.end_time === "--:--:--";
+            // Updated fallback: If sessions[] is empty, use --:--:-- for both fields
+            const latest = user.sessions.length > 0
+                ? user.sessions[0]
+                : { start_time: "--:--:--", end_time: "--:--:--" };
+
+            // Strictly support empty string as the indicator for Active status
+            const isActive = latest.end_time === "";
             const statusClass = isActive ? "status-active" : "status-inactive";
             const statusText = isActive ? "ACTIVE" : "INACTIVE";
 
-            // Find global index for toggle functionality
+            // View placeholder --:--:-- if end_time is empty
+            const displayEndTime = latest.end_time === "" ? "--:--:--" : latest.end_time;
+
             const uIndex = userData.findIndex(u => u.id === user.id);
 
             return `
                 <tr class="user-row" onclick="toggleSessions(${uIndex})">
                     <td>${user.username}</td>
                     <td>${latest.start_time}</td>
-                    <td>${latest.end_time}</td>
+                    <td>${displayEndTime}</td>
                     <td>${user.logged_time}h</td>
                     <td><span class="status-badge ${statusClass}">${statusText}</span></td>
                 </tr>
@@ -150,15 +157,18 @@
                     <td colspan="5" style="padding: 0;">
                         <table style="width: 100%; border: none;">
                             <tbody>
-                                ${user.sessions.map((s, sIndex) => `
+                                ${user.sessions.length > 0 ? user.sessions.map((s, sIndex) => {
+                const sEndTime = s.end_time === "" ? "--:--:--" : s.end_time;
+                return `
                                     <tr class="session-row" onclick="loadToSidebar(${uIndex}, ${sIndex})">
                                         <td style="width: 20%;"></td>
                                         <td style="width: 25%;">${s.start_time}</td>
-                                        <td style="width: 25%;">${s.end_time}</td>
+                                        <td style="width: 25%;">${sEndTime}</td>
                                         <td style="width: 15%;"></td>
                                         <td style="width: 15%; color:var(--yellow); text-align:right; padding-right:20px;">[SELECT]</td>
                                     </tr>
-                                `).join('')}
+                                    `;
+            }).join('') : `<tr><td colspan="5" style="text-align:center; padding:15px; opacity:0.5;">NO SESSION DATA AVAILABLE</td></tr>`}
                             </tbody>
                         </table>
                     </td>
@@ -186,6 +196,7 @@
 
         document.getElementById('target-user').value = user.username;
         document.getElementById('target-start').value = session.start_time;
+        // Sidebar gets the actual data value (empty string if active)
         document.getElementById('target-stop').value = session.end_time;
     }
 

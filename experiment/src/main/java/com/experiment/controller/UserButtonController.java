@@ -24,26 +24,21 @@ public class UserButtonController {
     }
     public void handleLoad(Context ctx) {
         logController.addInternalTime("PAGE_LOAD", "/api/user/data", "Fetched session data");
-
+        // This matches the structure: List of Users -> List of Sessions
         String example_data = """
-        [
-          {
-            "date": "2026-02-27",
-            "startTime": "08:00:00",
-            "endTime": "10:30:00"
-          },
-          {
-            "date": "2026-02-26",
-            "startTime": "14:15:00",
-            "endTime": "15:45:30"
-          },
-          {
-            "date": "2026-02-25",
-            "startTime": "09:00:00",
-            "endTime": "09:45:00"
-          }
-        ]
-        """;
+    [
+        {
+            "id": 1,
+            "username": "j_doe_99",
+            "logged_time": 45,
+            "sessions": [
+                {"start_time": "2026-03-02 08:00:00", "end_time": ""},
+                {"start_time": "2026-03-01 09:00:00", "end_time": "2026-03-01 17:21:03"},
+                {"start_time": "2026-02-28 08:30:00", "end_time": "2026-02-28 12:30:00"}
+            ]
+        }
+    ]
+    """;
 
         ctx.contentType("application/json");
         ctx.result(example_data);

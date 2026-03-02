@@ -61,23 +61,24 @@
         }
 
         .timestamp {
-            font-size: 72px;
+            font-size: 64px;
             font-weight: 500;
             color: #ffffff;
             margin-bottom: 40px;
             letter-spacing: -0.01em;
+            text-transform: uppercase;
         }
 
         .button-group {
             display: flex;
             gap: 20px;
-            margin-bottom: 50px; /* Space before table */
+            margin-bottom: 50px;
         }
 
         /* ── Table Styling ── */
         .table-container {
             width: 100%;
-            max-width: 800px;
+            max-width: 850px;
             border: 1px solid var(--border);
             background: var(--surface);
             border-radius: 4px;
@@ -158,7 +159,7 @@
 </header>
 
 <main class="main-content">
-    <div class="timestamp">1 Jan 00:00:00</div>
+    <div id="live-clock" class="timestamp">00:00:00</div>
 
     <div class="button-group">
         <button class="btn btn-start" onclick="sendCommand('start')">Start</button>
@@ -169,7 +170,6 @@
         <table>
             <thead>
             <tr>
-                <th>Date</th>
                 <th>Start Time</th>
                 <th>End Time</th>
                 <th>Total Time</th>
@@ -182,51 +182,106 @@
 </main>
 
 <script>
+    let activeStartTime = null;
+    let clockInterval = null;
+
     async function sendCommand(action) {
         await fetch(`/api/${action}`, { method: 'POST' });
-        // Refresh table data after command to show update
         loadTableData();
     }
 
     async function loadTableData() {
         try {
             const response = await fetch('/api/user/data');
-            const data = await response.json();
-
+            const users = await response.json();
             const tableBody = document.getElementById('session-table-body');
 
-            tableBody.innerHTML = data.map(row => {
-                // Calculate total time automatically
-                const total = calculateDuration(row.startTime, row.endTime);
+            tableBody.innerHTML = '';
+            activeStartTime = null;
 
-                return `
-                <tr>
-                    <td>${row.date}</td>
-                    <td>${row.startTime}</td>
-                    <td>${row.endTime}</td>
-                    <td>${total}</td>
-                </tr>
-            `;
-            }).join('');
+            users.forEach(user => {
+                const sessionRows = user.sessions.map(session => {
+                    if (session.end_time === "") {
+                        activeStartTime = session.start_time;
+                        return '';
+                    }
+
+                    // Use the new Xh Ym Zs format for the table only
+                    const duration = calculateDurationTable(session.start_time, session.end_time);
+
+                    return `
+                    <tr>
+                        <td>${session.start_time}</td>
+                        <td>${session.end_time}</td>
+                        <td>${duration}</td>
+                    </tr>
+                `;
+                }).join('');
+
+                tableBody.innerHTML += sessionRows;
+            });
+
+            handleClockLogic();
         } catch (err) {
             console.error("Table load failed:", err);
         }
     }
 
-    // Helper function to subtract Start from End
-    function calculateDuration(start, end) {
-        // We use a dummy date to parse the time strings
-        const s = new Date(`2000-01-01T${start}`);
-        const e = new Date(`2000-01-01T${end}`);
+    function handleClockLogic() {
+        if (clockInterval) clearInterval(clockInterval);
+        const clockElement = document.getElementById('live-clock');
 
-        let diff = e - s; // Difference in milliseconds
+        if (!activeStartTime) {
+            clockElement.innerText = "00:00:00";
+            return;
+        }
 
-        // Convert ms to HH:mm:ss
-        const hh = Math.floor(diff / 3600000).toString().padStart(2, '0');
-        const mm = Math.floor((diff % 3600000) / 60000).toString().padStart(2, '0');
-        const ss = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
+        const startDateObj = new Date(activeStartTime.replace(' ', 'T'));
+        const startTimestamp = startDateObj.getTime();
 
+        const day = String(startDateObj.getDate()).padStart(2, '0');
+        const month = startDateObj.toLocaleDateString('en-US', { month: 'short' });
+        const sessionDateStr = `${day} ${month}`;
+
+        const updateClock = () => {
+            const now = new Date().getTime();
+            const diff = now - startTimestamp;
+
+            let timeStr = "00:00:00";
+            if (diff > 0) {
+                // Keep the standard format for the Big Clock
+                timeStr = formatDiffStandard(diff);
+            }
+
+            clockElement.innerText = `${sessionDateStr} ${timeStr}`;
+        };
+
+        updateClock();
+        clockInterval = setInterval(updateClock, 1000);
+    }
+
+    function calculateDurationTable(startStr, stopStr) {
+        if (!stopStr || stopStr === "") return "--:--:--";
+        const start = new Date(startStr.replace(' ', 'T'));
+        const stop = new Date(stopStr.replace(' ', 'T'));
+        const diff = stop - start;
+        return (isNaN(diff) || diff < 0) ? "0h 0m 0s" : formatDiffTable(diff);
+    }
+
+    // Format for Big Clock: HH:MM:SS
+    function formatDiffStandard(ms) {
+        const hh = Math.floor(ms / 3600000).toString().padStart(2, '0');
+        const mm = Math.floor((ms % 3600000) / 60000).toString().padStart(2, '0');
+        const ss = Math.floor((ms % 60000) / 1000).toString().padStart(2, '0');
         return `${hh}:${mm}:${ss}`;
+    }
+
+    // Format for Table: Xh Ym Zs
+    function formatDiffTable(ms) {
+        const h = Math.floor(ms / 3600000);
+        const m = Math.floor((ms % 3600000) / 60000);
+        const s = Math.floor((ms % 60000) / 1000);
+        return `${h}h ${m}m ${s}s`;
     }
 
     window.onload = loadTableData;
