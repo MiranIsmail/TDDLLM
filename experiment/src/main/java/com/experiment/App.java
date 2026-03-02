@@ -2,7 +2,7 @@ package com.experiment;
 
 import com.experiment.controller.AdminController;
 import com.experiment.controller.AuthController;
-import com.experiment.controller.LogController; // Import this
+import com.experiment.controller.LogController;
 import com.experiment.controller.UserButtonController;
 import com.experiment.repository.SessionRepository;
 import com.experiment.repository.UserRepository;

@@ -36,7 +36,7 @@ public class AuthService {
      */
     public void register(String username, String password) {
         // TODO: validate inputs, hash the password with BCrypt, call userRepository.save()
-        logController.log("Here we log what happens like this");
+        logController.log("AuthService: register has been run with the parameters"+username+password);
     }
 
     /**
@@ -50,6 +50,7 @@ public class AuthService {
     public Session login(String username, String password) {
         // TODO: look up user, verify password hash, generate a secure random token,
         //       save session, return it
+        logController.log("AuthService: login has been run with the parameters"+username+password);
         throw new IllegalArgumentException("Not implemented yet");
     }
 
@@ -61,6 +62,7 @@ public class AuthService {
      */
     public Optional<User> getUserFromToken(String token) {
         // TODO: find session by token, then find user by session.getUserId()
+        logController.log("AuthService: getUserFromToken has been run with the parameters"+token);
         return Optional.empty();
     }
 
@@ -71,5 +73,6 @@ public class AuthService {
      */
     public void logout(String token) {
         // TODO: call sessionRepository.delete(token)
+        logController.log("AuthService: logout has been run with the parameters"+token);
     }
 }

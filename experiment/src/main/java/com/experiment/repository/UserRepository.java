@@ -32,7 +32,7 @@ public class UserRepository {
      */
     public void save(String username, String hashedPassword) {
         // TODO: implement — INSERT INTO users (username, password) VALUES (?, ?)
-        logController.log("Database: this is how we log");
+        logController.log("Database: Save has been run in UserRepository, the input parameters was"+username+hashedPassword);
     }
 
     /**
@@ -43,6 +43,7 @@ public class UserRepository {
      */
     public Optional<User> findByUsername(String username) {
         // TODO: implement — SELECT * FROM users WHERE username = ?
+        logController.log("Database: FindByUsername has been run in UserRepository, the input parameter was"+username);
         return Optional.empty();
     }
 
@@ -54,6 +55,7 @@ public class UserRepository {
      */
     public Optional<User> findById(int id) {
         // TODO: implement — SELECT * FROM users WHERE id = ?
+        logController.log("Database: findById has been run in UserRepository, the input parameter was"+id);
         return Optional.empty();
     }
 }
