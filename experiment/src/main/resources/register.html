@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Terminal Login</title>
+    <title>Terminal Register</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
     <style>
+        /* Reusing your existing styles */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
         :root {
             --bg:        #0d0f0e;
             --surface:   #141816;
@@ -18,8 +18,8 @@
             --accent-dim: #1e6e42;
             --text-mid:  #8faa96;
             --text-main: #c8d8cc;
+            --error:     #ff5555;
         }
-
         body {
             background: var(--bg);
             font-family: 'IBM Plex Mono', monospace;
@@ -29,7 +29,6 @@
             justify-content: center;
             color: var(--text-main);
         }
-
         .login-card {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -38,7 +37,6 @@
             max-width: 360px;
             border-radius: 4px;
         }
-
         .login-header {
             margin-bottom: 24px;
             font-size: 12px;
@@ -48,15 +46,8 @@
             border-bottom: 1px solid var(--border);
             padding-bottom: 12px;
         }
-
-        .login-header span {
-            color: var(--accent);
-        }
-
-        .field {
-            margin-bottom: 16px;
-        }
-
+        .login-header span { color: var(--accent); }
+        .field { margin-bottom: 16px; }
         .field label {
             display: block;
             font-size: 10px;
@@ -65,7 +56,6 @@
             text-transform: uppercase;
             letter-spacing: 0.1em;
         }
-
         .field input {
             width: 100%;
             background: var(--bg);
@@ -76,14 +66,9 @@
             padding: 10px 12px;
             border-radius: 3px;
             outline: none;
-            transition: border-color 0.2s;
         }
-
-        .field input:focus {
-            border-color: var(--accent-dim);
-        }
-
-        .btn-login {
+        .field input:focus { border-color: var(--accent-dim); }
+        .btn-reg {
             width: 100%;
             background: transparent;
             border: 1px solid var(--accent-dim);
@@ -98,44 +83,24 @@
             transition: all 0.2s;
             margin-top: 8px;
         }
-
-        .btn-login:hover {
-            background: rgba(61, 220, 132, 0.05);
-            border-color: var(--accent);
-        }
-
-        .btn-login:active {
-            background: rgba(61, 220, 132, 0.1);
-        }
-
-        /* Added Style for Registration Link */
-        .register-link {
-            display: block;
-            text-align: center;
+        .btn-reg:hover { background: rgba(61, 220, 132, 0.05); border-color: var(--accent); }
+        #status {
             margin-top: 20px;
-            font-size: 10px;
+            font-size: 11px;
             color: var(--text-mid);
-            text-decoration: none;
-            letter-spacing: 0.05em;
-            transition: color 0.2s;
-        }
-
-        .register-link:hover {
-            color: var(--accent);
-            text-decoration: underline;
+            text-align: center;
+            min-height: 1.2em;
         }
     </style>
 </head>
 <body>
 
 <div class="login-card">
-    <div class="login-header">
-        Auth // <span>Gatekeeper</span>
-    </div>
+    <div class="login-header">New Identity // <span>Enrollment</span></div>
 
     <div class="field">
         <label for="username">User ID</label>
-        <input type="text" id="username" autocomplete="off" placeholder="root">
+        <input type="text" id="username" autocomplete="off" placeholder="operator_01">
     </div>
 
     <div class="field">
@@ -143,22 +108,47 @@
         <input type="password" id="password" placeholder="••••••••">
     </div>
 
-    <button class="btn-login" onclick="sendToController()">Login</button>
+    <div class="field">
+        <label for="confirm">Verify Key</label>
+        <input type="password" id="confirm" placeholder="••••••••">
+    </div>
 
-    <a href="/register" class="register-link">NEW IDENTITY? ENROLL HERE</a>
+    <button class="btn-reg" onclick="register()">Initialize</button>
+    <div id="status">READY FOR INPUT</div>
 </div>
 
 <script>
-    async function sendToController() {
+    async function register() {
         const user = document.getElementById('username').value;
         const pass = document.getElementById('password').value;
+        const conf = document.getElementById('confirm').value;
+        const status = document.getElementById('status');
 
-        // Just send the data, no login logic here
-        await fetch('/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username: user, password: pass })
-        });
+        if (pass !== conf) {
+            status.innerHTML = "<span style='color: var(--error)'>ERROR: KEY MISMATCH</span>";
+            return;
+        }
+
+        status.innerText = "COMMUNICATING WITH GATEKEEPER...";
+
+        try {
+            const response = await fetch('/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: user, password: pass })
+            });
+
+            if (response.ok) {
+                status.style.color = "var(--accent)";
+                status.innerText = "ENROLLMENT SUCCESSFUL. REDIRECTING...";
+                setTimeout(() => window.location.href = '/login', 2000);
+            } else {
+                const errText = await response.text();
+                status.innerHTML = `<span style='color: var(--error)'>DENIED: ${errText.toUpperCase()}</span>`;
+            }
+        } catch (e) {
+            status.innerText = "FATAL: UPLINK FAILED";
+        }
     }
 </script>
 </body>

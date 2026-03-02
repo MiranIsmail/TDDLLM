@@ -55,6 +55,7 @@ public class App {
         app.get("/admin", ctx -> serveStatic(ctx, "/admin_page.html"));
         app.get("/user", ctx -> serveStatic(ctx, "/user_page.html"));
         app.get("/login", ctx -> serveStatic(ctx, "/login.html"));
+        app.get("/register", ctx -> serveStatic(ctx, "/register.html"));
 
         controller.registerRoutes(app);
 
