@@ -86,4 +86,14 @@ public class LogController {
         logHistory.add(entry);
         saveLogsToFile();
     }
+
+    public void changeInternalUser(String method, String endpoint, String changeDetails) {
+        String timestamp = java.time.LocalTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss"));
+
+        LogEntry entry = new LogEntry(timestamp, method, endpoint, 200, "ADMIN_CHANGE", changeDetails);
+
+        logHistory.add(entry);
+        saveLogsToFile();
+    }
+
 }

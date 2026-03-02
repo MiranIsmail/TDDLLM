@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Terminal Nav Template</title>
+    <title>Terminal Admin // Root</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
     <style>
@@ -15,15 +15,23 @@
             --border:    #1f2421;
             --accent:    #3ddc84;
             --accent-dim: #1e6e42;
+            --yellow:    #f0c040;
             --text-mid:  #8faa96;
+            --text-main: #c8d8cc;
+            --inactive:  #1f2421;
         }
 
         body {
             background: var(--bg);
             font-family: 'IBM Plex Mono', monospace;
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        /* ── Top Navigation Bar ── */
+        /* ── Topbar ── */
         .topbar {
             display: flex;
             align-items: center;
@@ -31,31 +39,17 @@
             padding: 0 20px;
             background: var(--surface);
             border-bottom: 1px solid var(--border);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
+            flex-shrink: 0;
+            z-index: 10;
         }
 
-        .topbar-dots {
-            display: flex;
-            gap: 6px;
-            margin-right: 15px;
-        }
-
+        .topbar-dots { display: flex; gap: 6px; margin-right: 15px; }
         .dot { width: 10px; height: 10px; border-radius: 50%; }
         .dot-r { background: #ff5f57; }
         .dot-y { background: #febc2e; }
         .dot-g { background: #28c840; }
 
-        .topbar-title {
-            color: var(--text-mid);
-            font-size: 11px;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-        }
-
+        .topbar-title { color: var(--text-mid); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
         .topbar-title span { color: var(--accent); }
 
         .nav-link {
@@ -67,12 +61,76 @@
             border: 1px solid var(--accent-dim);
             border-radius: 3px;
             transition: all 0.2s;
-            margin-left: auto; /* Pushes to the right */
+        }
+        .nav-link:hover { background: rgba(61, 220, 132, 0.1); border-color: var(--accent); }
+
+        /* ── Layout ── */
+        .app-body { display: flex; flex: 1; overflow: hidden; }
+        .main-view { flex: 1; padding: 40px; overflow-y: auto; }
+
+        .sidebar {
+            width: 320px;
+            background: var(--surface);
+            border-left: 1px solid var(--border);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            overflow-y: auto;
         }
 
-        .nav-link:hover {
-            background: rgba(61, 220, 132, 0.1);
-            border-color: var(--accent);
+        .sidebar-section-title {
+            font-size: 10px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        .sidebar-field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+        .sidebar-field label { font-size: 10px; color: var(--text-mid); text-transform: uppercase; }
+
+        .sidebar-input {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 10px;
+            font-family: inherit;
+            font-size: 12px;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .sidebar-input:focus { border-color: var(--accent-dim); }
+
+        /* ── Table ── */
+        .table-container { border: 1px solid var(--border); background: var(--surface); border-radius: 4px; overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        th { text-align: left; padding: 12px; color: var(--accent); background: var(--border); text-transform: uppercase; letter-spacing: 0.1em; }
+        td { padding: 12px; border-bottom: 1px solid var(--border); color: var(--text-mid); }
+        tr { cursor: pointer; transition: background 0.1s; }
+        tr:hover td { background: rgba(61, 220, 132, 0.05); color: #fff; }
+
+        /* ── Status Badges ── */
+        .status-badge { font-size: 9px; padding: 2px 6px; border-radius: 2px; font-weight: 600; }
+        .status-active { background: var(--accent-dim); color: var(--accent); }
+        .status-inactive { background: var(--inactive); color: var(--text-mid); }
+
+        .btn-commit {
+            background: var(--yellow);
+            color: #000;
+            border: none;
+            padding: 12px;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 3px;
+            text-transform: uppercase;
+            width: 100%;
+            margin-top: 10px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -84,11 +142,160 @@
         <div class="dot dot-y"></div>
         <div class="dot dot-g"></div>
     </div>
-
-    <div class="topbar-title">SYSTEM // <span>TERMINAL_v1.0</span></div>
-
-    <a href="#" class="nav-link">ACTION_LOG →</a>
+    <div class="topbar-title">SYSTEM // <span>ADMIN_CONSOLE</span></div>
+    <div style="flex: 1;"></div>
+    <a href="/logs" class="nav-link">VIEW SYSTEM LOGS →</a>
 </header>
+
+<div class="app-body">
+    <main class="main-view">
+        <h2 style="font-size: 18px; letter-spacing: 0.05em; margin-bottom: 25px;">USER_DIRECTORY_MAPPINGS</h2>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Start Time</th>
+                    <th>Stop Time</th>
+                    <th>Logged Hours</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody id="admin-table-body">
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <nav class="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">Directory Search</div>
+            <div class="sidebar-field">
+                <input type="text" id="search-input" class="sidebar-input" placeholder="Filter by User ID..." oninput="filterUsers()">
+            </div>
+        </div>
+
+        <div class="sidebar-section" style="border: 1px dashed var(--yellow); padding: 15px; border-radius: 4px;">
+            <div class="sidebar-section-title" style="color: var(--yellow); border-color: rgba(240,192,64,0.3);">Override Interface</div>
+
+            <div class="sidebar-field">
+                <label>Target User ID</label>
+                <input type="text" id="target-user" class="sidebar-input" placeholder="Select user..." readonly>
+            </div>
+
+            <div class="sidebar-field">
+                <label>Target Date</label>
+                <input type="text" id="target-date" class="sidebar-input" placeholder="YYYY-MM-DD" readonly>
+            </div>
+
+            <div class="sidebar-field">
+                <label>New Start Time</label>
+                <input type="text" id="target-start" class="sidebar-input" placeholder="HH:MM:SS">
+            </div>
+
+            <div class="sidebar-field">
+                <label>New End Time</label>
+                <input type="text" id="target-stop" class="sidebar-input" placeholder="HH:MM:SS">
+            </div>
+
+            <button class="btn-commit" onclick="commitChanges()">Commit Changes</button>        </div>
+    </nav>
+</div>
+
+<script>
+    let userData = []; // Original data from server
+
+    // Fetch and populate table on load
+    window.onload = async () => {
+        try {
+            const response = await fetch('/api/admin/users');
+            userData = await response.json();
+            renderTable(userData);
+        } catch (err) {
+            console.error("Critical: Admin data sync failure.", err);
+        }
+    };
+
+    // Renders the provided array into the table
+    function renderTable(data) {
+        const tableBody = document.getElementById('admin-table-body');
+
+        if (data.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px; color: var(--red);">NO MATCHING RECORDS FOUND</td></tr>';
+            return;
+        }
+
+        tableBody.innerHTML = data.map((user) => {
+            const isActive = user.stopTime === "--:--:--";
+            const statusText = isActive ? "ACTIVE" : "INACTIVE";
+            const statusClass = isActive ? "status-active" : "status-inactive";
+
+            // We find the original index in the userData array to keep loadSidebar working
+            const originalIndex = userData.findIndex(u => u.userId === user.userId);
+
+            return `
+                <tr onclick="loadSidebar(${originalIndex})">
+                    <td>${user.userId}</td>
+                    <td>${user.startTime}</td>
+                    <td>${user.stopTime}</td>
+                    <td>${user.hours}</td>
+                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    // Filter Logic
+    function filterUsers() {
+        const query = document.getElementById('search-input').value.toLowerCase();
+
+        // Filter the original userData array
+        const filtered = userData.filter(user =>
+            user.userId.toLowerCase().includes(query)
+        );
+
+        renderTable(filtered);
+    }
+
+    function loadSidebar(index) {
+        const user = userData[index];
+        document.getElementById('target-user').value = user.userId;
+        document.getElementById('target-start').value = user.startTime;
+        document.getElementById('target-stop').value = user.stopTime;
+        document.getElementById('target-date').value = "2026-03-02";
+    }
+
+    async function commitChanges() {
+        const payload = {
+            targetUser: document.getElementById('target-user').value,
+            date: document.getElementById('target-date').value,
+            newStart: document.getElementById('target-start').value,
+            newStop: document.getElementById('target-stop').value,
+            adminAction: "MANUAL_OVERRIDE"
+        };
+
+        // If no user is selected, don't send anything
+        if (!payload.targetUser) {
+            alert("Error: No target user selected for override.");
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/admin/override', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                alert("Override command transmitted and logged.");
+            }
+        } catch (err) {
+            console.error("Transmission failure:", err);
+        }
+    }
+</script>
 
 </body>
 </html>

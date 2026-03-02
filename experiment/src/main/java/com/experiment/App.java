@@ -1,5 +1,6 @@
 package com.experiment;
 
+import com.experiment.controller.AdminController;
 import com.experiment.controller.AuthController;
 import com.experiment.controller.LogController; // Import this
 import com.experiment.controller.UserButtonController;
@@ -26,6 +27,7 @@ public class App {
         SessionRepository sessRepo = new SessionRepository(db);
         AuthService authService   = new AuthService(userRepo, sessRepo);
         AuthController controller = new AuthController(authService, logController);
+        AdminController adminController = new AdminController(logController);
 
 
         Javalin app = Javalin.create(config -> {
@@ -33,6 +35,9 @@ public class App {
         });
 
         // --- UI ROUTES ---
+        // dd route for the Admin Page
+        app.get("/api/admin/users", adminController::handleLoad);
+        app.post("/api/admin/override", adminController::handleOverride);
 
         // Root Console
         app.get("/", ctx -> serveStatic(ctx, "/test-ui.html"));

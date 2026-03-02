@@ -1,0 +1,15 @@
+[ {
+  "timestamp" : "11:23:21",
+  "method" : "POST",
+  "endpoint" : "/api/admin/override",
+  "status" : 200,
+  "requestBody" : "ADMIN_CHANGE",
+  "responseBody" : "OVERRIDE_DATA: {\"targetUser\":\"m_smith_dev\",\"date\":\"2026-03-02\",\"newStart\":\"07:30:15\",\"newStop\":\"17:30:45\",\"adminAction\":\"MANUAL_OVERRIDE\"}"
+}, {
+  "timestamp" : "11:24:55",
+  "method" : "POST",
+  "endpoint" : "/api/admin/override",
+  "status" : 200,
+  "requestBody" : "ADMIN_CHANGE",
+  "responseBody" : "OVERRIDE_DATA: {\"targetUser\":\"j_doe_99\",\"date\":\"2026-03-02\",\"newStart\":\"08:15:22\",\"newStop\":\"09:00:00\",\"adminAction\":\"MANUAL_OVERRIDE\"}"
+} ]
