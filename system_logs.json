@@ -355,4 +355,32 @@
   "status" : 200,
   "requestBody" : "User Interacted",
   "responseBody" : "Fetched session data"
+}, {
+  "timestamp" : "15:50:49",
+  "method" : "PAGE_LOAD",
+  "endpoint" : "/api/user/data",
+  "status" : 200,
+  "requestBody" : "User Interacted",
+  "responseBody" : "Fetched session data"
+}, {
+  "timestamp" : "15:51:07",
+  "method" : "PAGE_LOAD",
+  "endpoint" : "/api/user/data",
+  "status" : 200,
+  "requestBody" : "User Interacted",
+  "responseBody" : "Fetched session data"
+}, {
+  "timestamp" : "15:51:08",
+  "method" : "PAGE_LOAD",
+  "endpoint" : "/api/user/data",
+  "status" : 200,
+  "requestBody" : "User Interacted",
+  "responseBody" : "Fetched session data"
+}, {
+  "timestamp" : "15:51:09",
+  "method" : "PAGE_LOAD",
+  "endpoint" : "/api/user/data",
+  "status" : 200,
+  "requestBody" : "User Interacted",
+  "responseBody" : "Fetched session data"
 } ]
