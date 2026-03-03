@@ -1,7 +1,8 @@
 #!/bin/bash
 # ─────────────────────────────────────────────────────────────
-#  Run this ONCE at the start of the experiment to set up git.
-#  After this, use commit-red.sh, commit-green.sh, commit-refactor.sh
+#  Run this ONCE at the very start of the experiment.
+#  It initialises git and makes the commit scripts executable.
+#  After this, use: red.sh → green.sh → blue.sh
 # ─────────────────────────────────────────────────────────────
 
 GREEN='\033[0;32m'
@@ -10,25 +11,32 @@ NC='\033[0m'
 
 echo ""
 echo -e "${CYAN}Setting up experiment repository...${NC}"
+echo ""
 
-# Init git
-git init
+# Initialise git if not already done
+if [ ! -d ".git" ]; then
+    git init
+fi
+
 git config user.email "participant@experiment.local"
 git config user.name "Participant"
 
-# Make commit scripts executable
-chmod +x commit-red.sh commit-green.sh commit-refactor.sh
+# Make all commit scripts executable
+chmod +x red.sh green.sh blue.sh
 
-# Initial commit of the skeleton
+# Record the initial skeleton as the baseline commit
 git add -A
 git commit -m "[SETUP] experiment skeleton — unimplemented stubs"
 
 echo ""
-echo -e "${GREEN}✓ Ready. Your TDD commit workflow:${NC}"
+echo -e "${GREEN}✓ Setup complete. Your TDD commit cycle:${NC}"
 echo ""
-echo "   1. ./commit-red.sh       — after writing a test (tests must FAIL)"
-echo "   2. ./commit-green.sh     — after implementing code (tests must PASS)"
-echo "   3. ./commit-refactor.sh  — after cleaning up (tests must still PASS)"
+echo "   1.  Write a test by hand"
+echo "   2.  ./red.sh    — commit the failing test"
+echo "   3.  Prompt Claude with the failing test, paste the code"
+echo "   4.  ./green.sh  — commit once all tests pass"
+echo "   5.  Refactor (optional, with or without Claude)"
+echo "   6.  ./blue.sh   — commit the cleaned-up code"
 echo ""
-echo "   Repeat for each task."
+echo "   Repeat steps 1–6 for each task."
 echo ""
