@@ -31,7 +31,7 @@ public class UserRepository {
      * @throws IllegalArgumentException if username already exists
      */
     public void save(String username, String hashedPassword) {
-        // TODO: implement — INSERT INTO users (username, password) VALUES (?, ?)
+        // TODO: implement
         logController.log("Database: Save has been run in UserRepository, the input parameters was"+username+hashedPassword);
     }
 
@@ -42,7 +42,7 @@ public class UserRepository {
      * @return an Optional containing the User if found, or empty if not
      */
     public Optional<User> findByUsername(String username) {
-        // TODO: implement — SELECT * FROM users WHERE username = ?
+        // TODO: implement
         logController.log("Database: FindByUsername has been run in UserRepository, the input parameter was"+username);
         return Optional.empty();
     }
@@ -54,7 +54,7 @@ public class UserRepository {
      * @return an Optional containing the User if found, or empty if not
      */
     public Optional<User> findById(int id) {
-        // TODO: implement — SELECT * FROM users WHERE id = ?
+        // TODO: implement
         logController.log("Database: findById has been run in UserRepository, the input parameter was"+id);
         return Optional.empty();
     }

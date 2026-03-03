@@ -35,7 +35,7 @@ public class AuthService {
      *                                  or if the username is already taken
      */
     public void register(String username, String password) {
-        // TODO: validate inputs, hash the password with BCrypt, call userRepository.save()
+        // TODO: Implement registration logic
         logController.log("AuthService: register has been run with the parameters"+username+password);
     }
 
@@ -48,8 +48,7 @@ public class AuthService {
      * @throws IllegalArgumentException if credentials are invalid
      */
     public Session login(String username, String password) {
-        // TODO: look up user, verify password hash, generate a secure random token,
-        //       save session, return it
+        // TODO: Implement login logic
         logController.log("AuthService: login has been run with the parameters"+username+password);
         throw new IllegalArgumentException("Not implemented yet");
     }

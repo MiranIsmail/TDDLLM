@@ -24,16 +24,16 @@ public class AuthController {
 
     private void handleRegister(Context ctx) {
         // Standard registration logic (Placeholder for now)
+        // TODO: Implement
         String body = ctx.body();
         LogController.getInstance().log("AuthController: Initialize has been pressed with the parameters:"+body);//example on how to use the logger
-        ctx.status(201).result("{\"message\": \"User registered successfully\"}");
     }
     private void handleLogin(Context ctx) {
         String body = ctx.body();
         LogController.getInstance().log("AuthController:Login has been pressed with the parameters:"+body);
 
+        // TODO: Implement
 
-        ctx.status(404).result("{\"raw\": \"Endpoint POST /api/register not found\"}");
     }
 
 
@@ -41,13 +41,13 @@ public class AuthController {
         // Standard profile logic (Placeholder for now)
         String body = ctx.body();
         LogController.getInstance().log("AuthController:Profile has been pressed with the parameters:"+body);
-        ctx.status(200).result("{\"username\": \"root\"}");
+        // TODO: Implement
     }
 
     private void handleLogout(Context ctx) {
         // Standard logout logic (Placeholder for now)
         String body = ctx.body();
         LogController.getInstance().log("AuthController:Logout has been pressed with the parameters:"+body);
-        ctx.status(200).result("{\"message\": \"Logged out\"}");
+        // TODO: Implement
     }
 }

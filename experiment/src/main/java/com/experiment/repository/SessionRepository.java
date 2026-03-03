@@ -27,7 +27,7 @@ public class SessionRepository {
      * @param session the session to store
      */
     public void save(Session session) {
-        // TODO: implement — INSERT INTO sessions (token, user_id, expires_at) VALUES (?, ?, ?)
+        // TODO: implement
         logController.log("SessionRepository: save has been run with the parameters"+session);
     }
 
@@ -38,7 +38,7 @@ public class SessionRepository {
      * @return an Optional containing the Session if found and not expired, or empty
      */
     public Optional<Session> findByToken(String token) {
-        // TODO: implement — SELECT * FROM sessions WHERE token = ? AND expires_at > NOW()
+        // TODO: implement
         logController.log("SessionRepository: findByToken has been run with the parameters"+token);
         return Optional.empty();
     }
@@ -49,7 +49,7 @@ public class SessionRepository {
      * @param token the session token to invalidate
      */
     public void delete(String token) {
-        // TODO: implement — DELETE FROM sessions WHERE token = ?
+        // TODO: implement
         logController.log("SessionRepository: delete has been run with the parameters"+token);
     }
 }
