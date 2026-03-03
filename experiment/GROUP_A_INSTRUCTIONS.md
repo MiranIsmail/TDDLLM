@@ -14,32 +14,34 @@ yourself with the structure before you begin.
 
 Implement the four classes marked **"YOU MUST IMPLEMENT ALL METHODS"** in the project:
 
-| Class | Location |
-|---|---|
-| `UserRepository` | `src/main/java/com/experiment/repository/` |
+| Class               | Location |
+|---------------------|---|
+| `UserRepository`    | `src/main/java/com/experiment/repository/` |
 | `SessionRepository` | `src/main/java/com/experiment/repository/` |
-| `AuthService` | `src/main/java/com/experiment/service/` |
-| `AuthController` | `src/main/java/com/experiment/controller/` |
+| `AuthService`       | `src/main/java/com/experiment/service/` |
+| `AuthController`    | `src/main/java/com/experiment/controller/` |
+| `UserController`    | `src/main/java/com/experiment/controller/` |
+| `AdminController`   | `src/main/java/com/experiment/controller/` |
 
-Do **not** modify `App.java`, `Database.java`, or the model classes.
+Do **not** modify `App.java`, or the model classes if not needed.
 
 ---
 
-## Required Endpoints
-
+# Required Endpoints
 Your implementation must expose the following HTTP endpoints:
+
+## ── Authentication & Registration ──
 
 ### `POST /api/register`
 Registers a new user.
 - **Request body:** `{ "username": "...", "password": "..." }`
-- **201 Created** on success: `{ "message": "User registered successfully" }`
-- **409 Conflict** if username already exists: `{ "error": "Username already taken" }`
+- **201 Created** on success: `{ "message": "User registered successfully" }`             #Kanske tid?
+- **409 Conflict** if username already exists: `{ "error": "Username already taken" }`    #varför ha id om username är unik
 - **400 Bad Request** for invalid input: `{ "error": "<reason>" }`
 
 ### `POST /api/login`
 Authenticates a user and returns a session token.
 - **Request body:** `{ "username": "...", "password": "..." }`
-- **200 OK** on success: `{ "token": "<session-token>" }`
 - **401 Unauthorized** for invalid credentials: `{ "error": "Invalid credentials" }`
 - **400 Bad Request** for missing/malformed input
 
@@ -55,7 +57,40 @@ Invalidates the current session.
 - **200 OK** on success: `{ "message": "Logged out" }`
 - **401 Unauthorized** if token is missing or invalid
 
+
+## ── Time Tracking (The `data` Table) ──
+
+### `POST /start`
+Initiates a new tracking session.
+- **Logic:** `INSERT INTO data (user_id, start_time, end_time) VALUES (?, CURRENT_TIMESTAMP, NULL)`.
+- **200 OK:** `{ "message": "Started successfully" }`
+
+### `POST /stop`
+Terminates the active session for the authenticated user.
+- **Logic:** `UPDATE data SET end_time = CURRENT_TIMESTAMP WHERE user_id = ? AND end_time IS NULL`.
+- **200 OK:** `{ "message": "Stopped successfully" }`
+
 ---
+## ── Data Retrieval ──
+
+### `GET /user/data`
+Retrieves the authenticated user's profile and their associated sessions from the `data` table.
+- **Backend Logic:** `SELECT * FROM users JOIN data ON users.id = data.user_id WHERE users.id = ?`.
+- **200 OK:** ```json
+  [
+  {
+  "id": 1,
+  "username": "j_doe_99",
+  "logged_time": 45,
+  "sessions": [
+  { "start_time": "2026-03-02 08:00:00", "end_time": "" },
+  { "start_time": "2026-03-01 09:00:00", "end_time": "2026-03-01 17:00:00" }
+  ]
+  }
+  ]
+---
+
+
 
 ## Rules
 

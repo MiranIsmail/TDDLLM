@@ -3,7 +3,7 @@ package com.experiment;
 import com.experiment.controller.AdminController;
 import com.experiment.controller.AuthController;
 import com.experiment.controller.LogController;
-import com.experiment.controller.UserButtonController;
+import com.experiment.controller.UserController;
 import com.experiment.repository.SessionRepository;
 import com.experiment.repository.UserRepository;
 import com.experiment.service.AuthService;
@@ -11,6 +11,7 @@ import io.javalin.Javalin;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 public class App {
 
@@ -38,10 +39,10 @@ public class App {
         app.get("/api/admin/users", adminController::handleLoad);
         app.post("/api/admin/override", adminController::handleOverride);
         app.get("/", ctx -> serveStatic(ctx, "/login.html"));
-        UserButtonController userButtonController = new UserButtonController(logController);
-        app.post("/api/start", userButtonController::handleStart);
-        app.post("/api/stop", userButtonController::handleStop);
-        app.get("/api/user/data", userButtonController::handleLoad);
+        UserController userController = new UserController(logController);
+        app.post("/api/start", userController::handleStart);
+        app.post("/api/stop", userController::handleStop);
+        app.get("/api/user/data", userController::handleLoad);
         app.get("/admin", ctx -> serveStatic(ctx, "/admin_page.html"));
         app.get("/user", ctx -> serveStatic(ctx, "/user_page.html"));
         app.get("/login", ctx -> serveStatic(ctx, "/login.html"));
@@ -65,4 +66,5 @@ public class App {
             ctx.status(500).result("Error loading resource");
         }
     }
+
 }

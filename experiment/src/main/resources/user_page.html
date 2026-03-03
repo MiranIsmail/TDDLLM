@@ -247,13 +247,14 @@
     async function loadTableData() {
         try {
             const response = await fetch('/api/user/data');
-            const users = await response.json();
+            const user = await response.json();
             const tableBody = document.getElementById('session-table-body');
 
             tableBody.innerHTML = '';
             activeStartTime = null;
 
-            users.forEach(user => {
+            // Ensure sessions exists before mapping
+            if (user.sessions && Array.isArray(user.sessions)) {
                 const sessionRows = user.sessions.map(session => {
                     if (session.end_time === "") {
                         activeStartTime = session.start_time;
@@ -271,8 +272,8 @@
                 `;
                 }).join('');
 
-                tableBody.innerHTML += sessionRows;
-            });
+                tableBody.innerHTML = sessionRows;
+            }
 
             handleClockLogic();
         } catch (err) {
