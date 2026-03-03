@@ -15,9 +15,11 @@
             --accent-dim: #1e6e42;
             --yellow:    #f0c040;
             --red:       #ff5c5c;
+            --red-dim:   #4a1c1c;
             --text-mid:  #8faa96;
             --text-main: #c8d8cc;
             --inactive:  #1f2421;
+            --overlay:   rgba(0, 0, 0, 0.85);
         }
 
         body { background: var(--bg); font-family: 'IBM Plex Mono', monospace; color: var(--text-main); margin: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
@@ -27,15 +29,71 @@
         .topbar-title { font-size: 11px; letter-spacing: 0.1em; color: var(--text-mid); text-transform: uppercase; }
         .topbar-title span { color: var(--accent); }
 
+        .btn-logout {
+            color: var(--accent);
+            background: transparent;
+            font-size: 10px;
+            font-family: inherit;
+            border: 1px solid var(--accent-dim);
+            padding: 4px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+        .btn-logout:hover { background: rgba(61, 220, 132, 0.1); border-color: var(--accent); }
+
+        /* ── Custom Terminal Modal ── */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--overlay);
+            display: none; /* Controlled by JS */
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            width: 400px;
+            padding: 30px;
+            border-radius: 4px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .modal-title { color: var(--red); font-size: 14px; margin-bottom: 15px; letter-spacing: 2px; }
+        .modal-text { color: var(--text-mid); font-size: 12px; margin-bottom: 25px; line-height: 1.6; }
+
+        .modal-actions { display: flex; gap: 15px; justify-content: center; }
+
+        .btn-modal {
+            padding: 10px 20px;
+            font-family: inherit;
+            font-size: 11px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 3px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .btn-confirm { background: var(--red); color: #000; border: none; }
+        .btn-confirm:hover { background: #ff7878; }
+
+        .btn-cancel { background: transparent; color: var(--text-main); border: 1px solid var(--border); }
+        .btn-cancel:hover { background: var(--border); }
+
+        /* ── Layout & Tables ── */
         .app-body { display: flex; flex: 1; overflow: hidden; }
         .main-view { flex: 1; padding: 40px; overflow-y: auto; }
-
-        /* ── Right Sidebar ── */
         .sidebar { width: 340px; background: var(--surface); border-left: 1px solid var(--border); padding: 24px; display: flex; flex-direction: column; gap: 30px; overflow-y: auto; }
         .sidebar-section-title { font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
         .override-box { border: 1px dashed var(--yellow); padding: 15px; border-radius: 4px; display: flex; flex-direction: column; gap: 15px; }
 
-        /* ── Table & Accordion ── */
         .table-container { border: 1px solid var(--border); background: var(--surface); border-radius: 4px; overflow: hidden; }
         table { width: 100%; border-collapse: collapse; font-size: 11px; }
         th { text-align: left; padding: 12px; color: var(--accent); background: var(--border); text-transform: uppercase; letter-spacing: 0.1em; }
@@ -55,36 +113,35 @@
         .session-row td:first-child { padding-left: 40px; position: relative; }
         .session-row td:first-child::before { content: '└'; position: absolute; left: 20px; color: var(--border); }
 
-        /* ── Status Messages ── */
-        #system-msg {
-            font-size: 10px;
-            padding: 8px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 2px;
-            min-height: 28px;
-            display: none;
-            letter-spacing: 0.05em;
-        }
+        #system-msg { font-size: 10px; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 2px; min-height: 28px; display: none; letter-spacing: 0.05em; }
         .msg-success { color: var(--accent); border: 1px solid var(--accent-dim); }
-        .msg-error { color: var(--red); border: 1px solid #4a1c1c; }
+        .msg-error { color: var(--red); border: 1px solid var(--red-dim); }
 
-        /* ── Badges & Inputs ── */
         .status-badge { font-size: 9px; padding: 2px 6px; border-radius: 2px; font-weight: 600; }
         .status-active { background: var(--accent-dim); color: var(--accent); }
         .status-inactive { background: var(--inactive); color: var(--text-mid); }
 
         .sidebar-input { background: var(--bg); border: 1px solid var(--border); color: var(--text-main); padding: 10px; border-radius: 4px; font-family: inherit; font-size: 12px; outline: none; width: 100%; }
-        .sidebar-input:focus { border-color: var(--accent-dim); }
-
         .btn-commit { background: var(--yellow); color: #000; border: none; padding: 12px; font-weight: 600; cursor: pointer; border-radius: 3px; text-transform: uppercase; font-size: 11px; width: 100%; }
     </style>
 </head>
 <body>
 
+<div id="logout-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-title">TERMINATE_SESSION</div>
+        <div class="modal-text">You are about to disconnect from your admin session. Proceed?</div>
+        <div class="modal-actions">
+            <button class="btn-modal btn-cancel" onclick="closeLogoutModal()">Cancel</button>
+            <button class="btn-modal btn-confirm" onclick="executeLogout()">Terminate</button>
+        </div>
+    </div>
+</div>
+
 <header class="topbar">
     <div class="topbar-title">SYSTEM // <span>ADMIN_CONSOLE</span></div>
     <div style="flex: 1;"></div>
-    <a href="/logs" style="color:var(--accent); text-decoration:none; font-size:10px; border:1px solid var(--accent-dim); padding:4px 10px; border-radius:3px;">VIEW SYSTEM LOGS →</a>
+    <button class="btn-logout" onclick="openLogoutModal()">Logout // Terminate →</button>
 </header>
 
 <div class="app-body">
@@ -114,26 +171,16 @@
 
         <div class="override-box">
             <div class="sidebar-section-title" style="color:var(--yellow); border-color: rgba(240,192,64,0.3); margin-bottom:0;">Override</div>
-
-            <div class="sidebar-field">
-                <label style="font-size:9px; color:var(--text-mid); display:block; margin-bottom:4px;">TARGET USER</label>
-                <input type="text" id="target-user" class="sidebar-input" readonly>
-            </div>
-            <div class="sidebar-field">
-                <label style="font-size:9px; color:var(--text-mid); display:block; margin-bottom:4px;">START TIMESTAMP</label>
-                <input type="text" id="target-start" class="sidebar-input">
-            </div>
-            <div class="sidebar-field">
-                <label style="font-size:9px; color:var(--text-mid); display:block; margin-bottom:4px;">END TIMESTAMP</label>
-                <input type="text" id="target-stop" class="sidebar-input">
-            </div>
-
+            <div class="sidebar-field"><label style="font-size:9px;">TARGET USER</label><input type="text" id="target-user" class="sidebar-input" readonly></div>
+            <div class="sidebar-field"><label style="font-size:9px;">START TIMESTAMP</label><input type="text" id="target-start" class="sidebar-input"></div>
+            <div class="sidebar-field"><label style="font-size:9px;">END TIMESTAMP</label><input type="text" id="target-stop" class="sidebar-input"></div>
             <div id="system-msg"></div>
-
             <button class="btn-commit" onclick="commitChanges()">Commit Changes</button>
         </div>
     </nav>
 </div>
+
+
 
 <script>
     let userData = [];
@@ -146,28 +193,27 @@
         } catch (err) { console.error("Sync Error", err); }
     };
 
+    // Modal Control Logic
+    function openLogoutModal() { document.getElementById('logout-modal').style.display = 'flex'; }
+    function closeLogoutModal() { document.getElementById('logout-modal').style.display = 'none'; }
+    function executeLogout() { window.location.href = "/login"; }
+
     function showStatus(text, isError = false) {
         const msg = document.getElementById('system-msg');
         msg.innerText = `> ${text}`;
         msg.style.display = 'block';
         msg.className = isError ? 'msg-error' : 'msg-success';
-
-        // Auto-hide after 4 seconds
         setTimeout(() => { msg.style.display = 'none'; }, 4000);
     }
 
     function renderTable(dataToRender) {
         const body = document.getElementById('admin-table-body');
         body.innerHTML = dataToRender.map((user) => {
-            const latest = user.sessions.length > 0
-                ? user.sessions[0]
-                : { start_time: "--:--:--", end_time: "--:--:--" };
-
+            const latest = user.sessions.length > 0 ? user.sessions[0] : { start_time: "--:--:--", end_time: "--:--:--" };
             const isActive = latest.end_time === "";
             const statusClass = isActive ? "status-active" : "status-inactive";
             const statusText = isActive ? "ACTIVE" : "INACTIVE";
             const displayEndTime = latest.end_time === "" ? "--:--:--" : latest.end_time;
-
             const uIndex = userData.findIndex(u => u.id === user.id);
 
             return `
@@ -178,9 +224,7 @@
                     <td>${user.logged_time}h</td>
                     <td class="status-cell">
                         <span class="status-badge ${statusClass}">${statusText}</span>
-                        <svg class="chevron" viewBox="0 0 24 24">
-                            <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
-                        </svg>
+                        <svg class="chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
                     </td>
                 </tr>
                 <tr id="sessions-${uIndex}" class="session-container">
@@ -196,14 +240,12 @@
                                         <td style="width: 25%;">${sEndTime}</td>
                                         <td style="width: 15%;"></td>
                                         <td style="width: 15%; color:var(--yellow); text-align:right; padding-right:20px;">[SELECT]</td>
-                                    </tr>
-                                    `;
+                                    </tr>`;
             }).join('') : `<tr><td colspan="5" style="text-align:center; padding:15px; opacity:0.5;">NO SESSION DATA AVAILABLE</td></tr>`}
                             </tbody>
                         </table>
                     </td>
-                </tr>
-            `;
+                </tr>`;
         }).join('');
     }
 
@@ -231,31 +273,12 @@
     }
 
     async function commitChanges() {
-        const payload = {
-            user: document.getElementById('target-user').value,
-            start: document.getElementById('target-start').value,
-            stop: document.getElementById('target-stop').value
-        };
-
-        if(!payload.user) {
-            showStatus("ERROR: NO_USER_SELECTED", true);
-            return;
-        }
-
+        const payload = { user: document.getElementById('target-user').value, start: document.getElementById('target-start').value, stop: document.getElementById('target-stop').value };
+        if(!payload.user) { showStatus("ERROR: NO_USER_SELECTED", true); return; }
         try {
-            const response = await fetch('/api/admin/override', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(payload)
-            });
-            if (response.ok) {
-                showStatus("COMMAND_EXECUTED: DATABASE_UPDATED");
-            } else {
-                showStatus("ERROR: SERVER_REJECTED_TRANSMISSION", true);
-            }
-        } catch (err) {
-            showStatus("CRITICAL: NETWORK_FAILURE", true);
-        }
+            const response = await fetch('/api/admin/override', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+            if (response.ok) showStatus("COMMAND_EXECUTED: DATABASE_UPDATED"); else showStatus("ERROR: SERVER_REJECTED", true);
+        } catch (err) { showStatus("CRITICAL: NETWORK_FAILURE", true); }
     }
 </script>
 </body>

@@ -18,6 +18,7 @@
             --red:       #ff5c5c;
             --red-dim:   #6e2020;
             --text-mid:  #8faa96;
+            --overlay:   rgba(0, 0, 0, 0.85);
         }
 
         body {
@@ -40,14 +41,24 @@
             flex-shrink: 0;
         }
 
-        .topbar-dots { display: flex; gap: 6px; margin-right: 15px; }
-        .dot { width: 10px; height: 10px; border-radius: 50%; }
-        .dot-r { background: #ff5f57; }
-        .dot-y { background: #febc2e; }
-        .dot-g { background: #28c840; }
-
         .topbar-title { color: var(--text-mid); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
         .topbar-title span { color: var(--accent); }
+
+        /* ── Logout Button Style ── */
+        .btn-logout {
+            color: var(--accent);
+            background: transparent;
+            font-size: 10px;
+            font-family: inherit;
+            border: 1px solid var(--accent-dim);
+            padding: 4px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .btn-logout:hover { background: rgba(61, 220, 132, 0.1); border-color: var(--accent); }
 
         /* ── Main Body Content ── */
         .main-content {
@@ -111,7 +122,7 @@
         tr:last-child td { border-bottom: none; }
         tr:hover td { background: rgba(61, 220, 132, 0.05); color: #fff; }
 
-        /* ── Buttons ── */
+        /* ── Action Buttons ── */
         .btn {
             font-family: inherit;
             font-size: 14px;
@@ -131,27 +142,69 @@
         .btn-stop { color: var(--red); border: 1px solid var(--red-dim); }
         .btn-stop:hover { background: rgba(255, 92, 92, 0.1); border-color: var(--red); }
 
-        .nav-link {
-            color: var(--accent);
-            text-decoration: none;
-            font-size: 10px;
-            letter-spacing: 0.1em;
-            padding: 4px 10px;
-            border: 1px solid var(--accent-dim);
-            border-radius: 3px;
-            transition: all 0.2s;
+        /* ── Custom Terminal Modal ── */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--overlay);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
         }
 
-        .nav-link:hover { background: rgba(61, 220, 132, 0.1); border-color: var(--accent); }
+        .modal-content {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            width: 400px;
+            padding: 30px;
+            border-radius: 4px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .modal-title { color: var(--red); font-size: 14px; margin-bottom: 15px; letter-spacing: 2px; }
+        .modal-text { color: var(--text-mid); font-size: 12px; margin-bottom: 25px; line-height: 1.6; }
+
+        .modal-actions { display: flex; gap: 15px; justify-content: center; }
+
+        .btn-modal {
+            padding: 10px 20px;
+            font-family: inherit;
+            font-size: 11px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 3px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .btn-confirm { background: var(--red); color: #000; border: none; }
+        .btn-confirm:hover { background: #ff7878; }
+
+        .btn-cancel { background: transparent; color: #fff; border: 1px solid var(--border); }
+        .btn-cancel:hover { background: var(--border); }
+
     </style>
 </head>
 <body>
 
-<header class="topbar">
+<div id="logout-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-title">TERMINATE_SESSION</div>
+        <div class="modal-text">You are about to disconnect from the System Console. Active timers will continue until manually stopped. Proceed?</div>
+        <div class="modal-actions">
+            <button class="btn-modal btn-cancel" onclick="closeLogoutModal()">Cancel</button>
+            <button class="btn-modal btn-confirm" onclick="executeLogout()">Terminate</button>
+        </div>
+    </div>
+</div>
 
+<header class="topbar">
     <div class="topbar-title">SYSTEM // <span>CONSOLE</span></div>
     <div style="flex: 1;"></div>
-    <a href="/logs" class="nav-link">VIEW SYSTEM LOGS →</a>
+    <button class="btn-logout" onclick="openLogoutModal()">Logout // Terminate →</button>
 </header>
 
 <main class="main-content">
@@ -181,6 +234,11 @@
     let activeStartTime = null;
     let clockInterval = null;
 
+    // Modal Controls
+    function openLogoutModal() { document.getElementById('logout-modal').style.display = 'flex'; }
+    function closeLogoutModal() { document.getElementById('logout-modal').style.display = 'none'; }
+    function executeLogout() { window.location.href = "/login"; }
+
     async function sendCommand(action) {
         await fetch(`/api/${action}`, { method: 'POST' });
         loadTableData();
@@ -202,7 +260,6 @@
                         return '';
                     }
 
-                    // Use the new Xh Ym Zs format for the table only
                     const duration = calculateDurationTable(session.start_time, session.end_time);
 
                     return `
@@ -245,7 +302,6 @@
 
             let timeStr = "00:00:00";
             if (diff > 0) {
-                // Keep the standard format for the Big Clock
                 timeStr = formatDiffStandard(diff);
             }
 
@@ -264,7 +320,6 @@
         return (isNaN(diff) || diff < 0) ? "0h 0m 0s" : formatDiffTable(diff);
     }
 
-    // Format for Big Clock: HH:MM:SS
     function formatDiffStandard(ms) {
         const hh = Math.floor(ms / 3600000).toString().padStart(2, '0');
         const mm = Math.floor((ms % 3600000) / 60000).toString().padStart(2, '0');
@@ -272,7 +327,6 @@
         return `${hh}:${mm}:${ss}`;
     }
 
-    // Format for Table: Xh Ym Zs
     function formatDiffTable(ms) {
         const h = Math.floor(ms / 3600000);
         const m = Math.floor((ms % 3600000) / 60000);
