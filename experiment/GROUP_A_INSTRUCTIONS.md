@@ -11,6 +11,18 @@ yourself with the structure before you begin.
 ---
 
 ## Your Task
+Your task is to implement logic for the following pages:
+### ── Login Page/Register Page ──
+* connect the database with the login and register page
+* You should be able to creat a new user to the register page and it should be saved in the database
+* You should be able to login to a specific user.
+* If your not logged in you should only be able to access /login and /register
+### ── Admin Page ──
+* Admins should not be able to be created, admins can only be created from the database.
+* Only admins should be able to access the admin page
+* On the admin page you should be able to see every user, and also modify their timers. 
+
+### ── User Page ──
 
 Implement the four classes marked **"YOU MUST IMPLEMENT ALL METHODS"** in the project:
 
@@ -72,7 +84,22 @@ Terminates the active session for the authenticated user.
 
 ---
 ## ── Data Retrieval ──
-
+### help functions
+* **stringifyUser** - takes input of database and converts it into correct format for the frontend. needed for AdminController and USerController.
+  * Expected inputs:
+    * `int id` - id from db
+    * `String username` - username from db
+    * `long loggedTime` - total logged time (use helpfunction)
+    * `List<String> starts` - list of all time entries with matching user ID from data section in db
+    * `List<String> ends` - list of all time entries with matching user ID from data section in db
+  * Expected output:
+    * `String`
+* **calculateTotalLoggedTime** - Takes input of all time entries given and calculate the total time
+  * Expected inputs:
+      * `List<String> starts` - list of all time entries with matching user ID from data section in db
+      * `List<String> ends` - list of all time entries with matching user ID from data section in db
+  * Expected output:
+      * `Long`
 ### `GET /user/data`
 Retrieves the authenticated user's profile and their associated sessions from the `data` table.
 - **Backend Logic:** `SELECT * FROM users JOIN data ON users.id = data.user_id WHERE users.id = ?`.
@@ -110,7 +137,7 @@ mvn compile
 mvn exec:java -Dexec.mainClass="com.experiment.App"
 ```
 
-The app will start on port 7070.
+The app will start on port 8080.
 
 ## How to Verify Your Work
 
