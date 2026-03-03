@@ -1,155 +1,67 @@
-# Group A — Standard Prompting Instructions
+# Goals
+## G1 - Secure authentication and Role-Based Access Control.
+## G2 - Accurate recording of work hours with data integrity.
+## G3 - Administrative governance.
 
-## Overview
-
-You will implement login functionality for a Java web application using the Javalin framework.
-You must use **Claude claude-opus-4-6** as your code generation assistant.
-
-The project skeleton has already been set up for you. Open it in your IDE and familiarise
-yourself with the structure before you begin.
-
----
-
-## Your Task
-Your task is to implement logic for the following pages:
-### ── Login Page/Register Page ──
-* connect the database with the login and register page
-* You should be able to creat a new user to the register page and it should be saved in the database
-* You should be able to login to a specific user.
-* If your not logged in you should only be able to access /login and /register
-### ── Admin Page ──
-* Admins should not be able to be created, admins can only be created from the database.
-* Only admins should be able to access the admin page
-* On the admin page you should be able to see every user, and also modify their timers. 
-
-### ── User Page ──
-
-Implement the four classes marked **"YOU MUST IMPLEMENT ALL METHODS"** in the project:
-
-| Class               | Location |
-|---------------------|---|
-| `UserRepository`    | `src/main/java/com/experiment/repository/` |
-| `SessionRepository` | `src/main/java/com/experiment/repository/` |
-| `AuthService`       | `src/main/java/com/experiment/service/` |
-| `AuthController`    | `src/main/java/com/experiment/controller/` |
-| `UserController`    | `src/main/java/com/experiment/controller/` |
-| `AdminController`   | `src/main/java/com/experiment/controller/` |
-
-Do **not** modify `App.java`, or the model classes if not needed.
-
----
-
-# Required Endpoints
-Your implementation must expose the following HTTP endpoints:
-
-## ── Authentication & Registration ──
-
-### `POST /api/register`
-Registers a new user.
-- **Request body:** `{ "username": "...", "password": "..." }`
-- **201 Created** on success: `{ "message": "User registered successfully" }`             #Kanske tid?
-- **409 Conflict** if username already exists: `{ "error": "Username already taken" }`    #varför ha id om username är unik
-- **400 Bad Request** for invalid input: `{ "error": "<reason>" }`
-
-### `POST /api/login`
-Authenticates a user and returns a session token.
-- **Request body:** `{ "username": "...", "password": "..." }`
-- **401 Unauthorized** for invalid credentials: `{ "error": "Invalid credentials" }`
-- **400 Bad Request** for missing/malformed input
-
-### `GET /api/profile`
-Returns the authenticated user's profile.
-- **Header:** `Authorization: Bearer <token>`
-- **200 OK** on success: `{ "username": "..." }`
-- **401 Unauthorized** if token is missing or invalid
-
-### `POST /api/logout`
-Invalidates the current session.
-- **Header:** `Authorization: Bearer <token>`
-- **200 OK** on success: `{ "message": "Logged out" }`
-- **401 Unauthorized** if token is missing or invalid
+# Potential User
+## E1 - As a Potential User i can register so that i can login
+### E1S1 - As a Potential User i can go to the websites register page and register as a user using a unique username and a password
+### E1S2 - As a Potential User i can not access other pages of the website except for the register and login page
 
 
-## ── Time Tracking (The `data` Table) ──
+# User Story
+## E2 - As a User i can login into the webside so that i can see my log time and log new time as well as logout.
+### E2S1 - As a User i can go to the login page and login with my unique Username and my password which was registered beforehand
+### E2S2 - As a User i can go to the register page but can not register using my existing Username.
+### E2S3 - As a User i can go to the User page and view my existing time logs.
+### E2S4 - As a User i can go to the User page and log new timelogs.
+### E2S5 - As a User i can not edit my time logs.
+### E2S6 - As a signed in User i can ONLY access the User page and not other pages such as admin, login and register.
+### E2S7 - As a signed in User i can logout.
 
-### `POST /start`
-Initiates a new tracking session.
-- **Logic:** `INSERT INTO data (user_id, start_time, end_time) VALUES (?, CURRENT_TIMESTAMP, NULL)`.
-- **200 OK:** `{ "message": "Started successfully" }`
-
-### `POST /stop`
-Terminates the active session for the authenticated user.
-- **Logic:** `UPDATE data SET end_time = CURRENT_TIMESTAMP WHERE user_id = ? AND end_time IS NULL`.
-- **200 OK:** `{ "message": "Stopped successfully" }`
-
----
-## ── Data Retrieval ──
-### help functions
-* **stringifyUser** - takes input of database and converts it into correct format for the frontend. needed for AdminController and USerController.
-  * Expected inputs:
-    * `int id` - id from db
-    * `String username` - username from db
-    * `long loggedTime` - total logged time (use helpfunction)
-    * `List<String> starts` - list of all time entries with matching user ID from data section in db
-    * `List<String> ends` - list of all time entries with matching user ID from data section in db
-  * Expected output:
-    * `String`
-* **calculateTotalLoggedTime** - Takes input of all time entries given and calculate the total time
-  * Expected inputs:
-      * `List<String> starts` - list of all time entries with matching user ID from data section in db
-      * `List<String> ends` - list of all time entries with matching user ID from data section in db
-  * Expected output:
-      * `Long`
-### `GET /user/data`
-Retrieves the authenticated user's profile and their associated sessions from the `data` table.
-- **Backend Logic:** `SELECT * FROM users JOIN data ON users.id = data.user_id WHERE users.id = ?`.
-- **200 OK:** ```json
-  [
-  {
-  "id": 1,
-  "username": "j_doe_99",
-  "logged_time": 45,
-  "sessions": [
-  { "start_time": "2026-03-02 08:00:00", "end_time": "" },
-  { "start_time": "2026-03-01 09:00:00", "end_time": "2026-03-01 17:00:00" }
-  ]
-  }
-  ]
----
+# Admin Story
+## E3 - As an Admin I can log in to the website so that i can administrate users logs and so that i can see my log time and log new time as well as logout.
+### E3S1 - As an Admin i can access the login page and log in using my unique username and password.
+### E2S2 - As an Admin i can go to the register page but can not register using my existing Username.
+### E3S3 - As an Admin i can go to the User page and view my existing time logs.
+### E3S4 - As an Admin i can go to the User page and log new timelogs.
+### E3S5 - As a Admin i can edit every users time logs in the admin page.
+### E3S6 - As a signed in Admin i can ONLY access the User page / Admin page and not other pages such as login and register.
+### E3S7 - As a signed in Admin i can logout.
+### E3S8 - As an Admin i can access the admin page and view every Users time logs.
+### E3S9 - As an Admin i can access the admin page and elevate an existing User to Admin level.
 
 
 
-## Rules
 
-1. You **must** use Claude claude-opus-4-6 at `claude.ai` for code generation.
-2. You may use Claude freely — as many prompts as you like, in whatever order you prefer.
-3. You may copy and paste generated code directly, modify it, or combine multiple responses.
-4. Do not write code without going through Claude.
-5. Record the number of prompts you send (the experimenter will also log this).
-6. Record the total time taken from first prompt to all tests passing.
+# Authentication
+### Requirement: Users must authenticate to reach protected routes.
+#### Role-Based Access Control Logic:
+- Potential User: Access to `/login`, `/register`. Redirected to `/user` if already logged in.
+- USER: Access to `/user`, `/logout`. Unauthorized for `/admin`.
+- ADMIN: Access to `/user`, `/admin`, `/logout`.
 
----
+# Application structure
+## `src/main/java/com.expermint/`
+This is where the code is located, and it is further divided into these packages:
+### `/controller`
+All files inside the controller handles the API calls, this is where you can implement the logic for the new API calls and edit them.
+At the moment there are some boilerplate data inside these files just so that we can showcase it in the frontend. You can remove those if you want.
+### `/model`
+This is where the base classes (Object classes) are located. They have everything necessary in them but if you want you can modify them.
+There are two helper functions inside the User class (stringifyUser,calculateTotalLoggedTime) that are there to make sure that the frontend gets the correct JSON structure. try to not modify these or the fron-end might brake.
+### `/repository`
+This is where the database managers are located, here you can for example write a function to add a User and so on.
+It is the middleman between the API and the Sqlite database.
+### `/service`
+### `App.java`
+This is where the Application and classes are initialized. The routes are defined here as well, you can modify as you like.
+### `Database.java`
+The database have every necessary table and variables but if you want to modify it, go ahead.
+## `src/main/java/resources/`
+The HTLM files are located here, they should not be modified, but you can if you really want to.
+## `src/test/java/com.expermint/`
+The tests are located here, there is some boilerplate to get you started. You can modify as you please.
 
-## How to Run the Application
-
-```bash
-mvn compile
-mvn exec:java -Dexec.mainClass="com.experiment.App"
-```
-
-The app will start on port 8080.
-
-## How to Verify Your Work
-
-The experimenter will run security and quality analysis tools on your submitted code.
-Make sure the application starts and all four endpoints respond correctly.
-
----
-
-## Time Limit
-
-You have **90 minutes** to complete the implementation.
-
----
-
-*Please do not discuss your approach with participants in the other group.*
+# Your Task
+Your task is to implement all the User stories above using [].
