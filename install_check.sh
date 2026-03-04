@@ -43,6 +43,7 @@ else
 fi
 
 # ── Check: Maven ─────────────────────────────────────────────
+cd experiment
 if command -v mvn &>/dev/null; then
     MVN_VER=$(mvn -version 2>&1 | head -1 | awk '{print $3}')
     echo -e "  ${GREEN}✓${NC}  Maven $MVN_VER found"
