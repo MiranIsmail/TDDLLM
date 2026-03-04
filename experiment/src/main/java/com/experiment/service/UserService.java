@@ -5,6 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+The provided templates are only examples, you are allowed to add more or remove them */
+
+
+
 public class UserService {
 
     private final ObjectMapper mapper = new ObjectMapper();
