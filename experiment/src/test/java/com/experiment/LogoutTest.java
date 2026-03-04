@@ -9,7 +9,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * GROUP B (TDD) — Logout Tests
  * Do not modify these tests. (Note: Updated with try-with-resources to prevent memory leaks)
  */
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class LogoutTest {
 
     // -------------------------------------------------------------------------

@@ -8,14 +8,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * GROUP B (TDD) — Login Tests
  */
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class LoginTest {
 
     // -------------------------------------------------------------------------
     // TASK 2: User Login
     //
     // Implement the POST /api/login endpoint.
-    // below is an example of a test
+    // below is an example of a test and not a real test, this will most likely fail!!
     // -------------------------------------------------------------------------
 
     private static final String REGISTER_BODY =

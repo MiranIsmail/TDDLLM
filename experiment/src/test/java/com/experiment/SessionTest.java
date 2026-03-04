@@ -8,14 +8,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * GROUP B (TDD) — Protected Endpoint & Session Tests
  */
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class SessionTest {
 
     // -------------------------------------------------------------------------
     // TASK 3: Protected resource (GET /api/profile)
     //
     // The endpoint must verify the session token sent in the Authorization header.
-    // Below is an example test
+    // below is an example of a test and not a real test, this will most likely fail!!
     // -------------------------------------------------------------------------
 
     private String obtainToken(io.javalin.testtools.HttpClient client) throws Exception {
@@ -34,7 +33,6 @@ class SessionTest {
     }
 
     @Test
-    @Order(1)
     @DisplayName("Valid token grants access to profile endpoint")
     void validTokenGrantsAccess() {
         JavalinTest.test(App.createApp(true), (server, client) -> {

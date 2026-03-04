@@ -9,18 +9,16 @@ import static org.assertj.core.api.Assertions.assertThat;
  * GROUP B (TDD) — Registration Tests
  *
  */
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class RegistrationTest {
 
     // -------------------------------------------------------------------------
     // TASK 1: User Registration
     //
     // Implement the POST /api/register endpoint.
-    // Below is an example test
+    // below is an example of a test and not a real test, this will most likely fail!!
     // -------------------------------------------------------------------------
 
     @Test
-    @Order(1)
     @DisplayName("Successful registration returns 201")
     void successfulRegistrationReturns201() {
         JavalinTest.test(App.createApp(true), (server, client) -> {
