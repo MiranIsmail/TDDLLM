@@ -63,5 +63,26 @@ The HTLM files are located here, they should not be modified, but you can if you
 ## `src/test/java/com.expermint/`
 The tests are located here, there is some boilerplate to get you started. You can modify as you please.
 
+---
+
 # Your Task
-Your task is to implement all the User stories above using [].
+Your task is to implement all the User stories above using the following process. These tasks should be completed within 150 minutes; this is a hard limit.
+
+You are to implement the missing functionalities described above using standard LLM prompting. This means that you should not write any code yourself, but instead generate everything. You are allowed to manually make small changes, such as fixing variable names or adjusting the orientation of the code, but the main functions must be generated.
+## Provided resources
+- **llm.miranis.cc**: This is the website provided to you to use Claude opus 4-6. Your credentials have been sent to you by email.
+- **The GitHub repository**: This is where the experiment code is located. **PROVIDE LINK HERE**
+- **Guideline PDF**: This document contains a detailed description of the process, covering common prompting practices and strategies to maximize the effectiveness of your prompts.
+## The process
+- You are to follow the guidelines to generate code that implements the user stories
+- You should not write your own code, but minor bug fixes or changes is allowed. You can think that if it takes longer time to prompt the fix you can do it by hand
+
+
+---
+
+
+# Glossary
+     - G is abbreviation for goal so G1 is goal 1
+     - E is abbreviation for epic so E1 is epic 1
+     - S is abbreviation for scenario so S1 is scenario 1
+
