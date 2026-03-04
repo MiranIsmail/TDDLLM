@@ -27,6 +27,7 @@ public class AuthController {
         // TODO: Implement
         String body = ctx.body();
         LogController.getInstance().log("AuthController: Initialize has been pressed with the parameters:"+body);//example on how to use the logger
+        ctx.status(201).result("registered successfully"); // placeholder
     }
     private void handleLogin(Context ctx) {
         String body = ctx.body();

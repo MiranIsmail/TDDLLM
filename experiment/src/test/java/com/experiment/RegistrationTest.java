@@ -6,13 +6,13 @@ import org.junit.jupiter.api.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * GROUP B (TDD) — Registration Tests
+ * Registration Tests
  *
  */
 class RegistrationTest {
 
     // -------------------------------------------------------------------------
-    // TASK 1: User Registration
+    // TASK: User Registration
     //
     // Implement the POST /api/register endpoint.
     // below is an example of a test and not a real test, this will most likely fail!!

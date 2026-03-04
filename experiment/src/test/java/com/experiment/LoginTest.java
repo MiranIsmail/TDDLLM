@@ -6,12 +6,12 @@ import org.junit.jupiter.api.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * GROUP B (TDD) — Login Tests
+ * Login Tests
  */
 class LoginTest {
 
     // -------------------------------------------------------------------------
-    // TASK 2: User Login
+    // TASK: User Login
     //
     // Implement the POST /api/login endpoint.
     // below is an example of a test and not a real test, this will most likely fail!!

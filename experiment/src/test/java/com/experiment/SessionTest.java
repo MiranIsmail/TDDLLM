@@ -6,12 +6,12 @@ import org.junit.jupiter.api.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * GROUP B (TDD) — Protected Endpoint & Session Tests
+ * Protected Endpoint & Session Tests
  */
 class SessionTest {
 
     // -------------------------------------------------------------------------
-    // TASK 3: Protected resource (GET /api/profile)
+    // TASK: Protected resource (GET /api/profile)
     //
     // The endpoint must verify the session token sent in the Authorization header.
     // below is an example of a test and not a real test, this will most likely fail!!
