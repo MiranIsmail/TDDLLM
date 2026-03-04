@@ -24,7 +24,6 @@ class LoginTest {
             """;
 
     @Test
-    @Order(1)
     @DisplayName("Valid credentials return 200 and a token")
     void validCredentialsReturnTokenWith200() {
         JavalinTest.test(App.createApp(true), (server, client) -> {

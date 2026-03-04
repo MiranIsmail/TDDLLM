@@ -7,6 +7,7 @@ import com.experiment.controller.UserController;
 import com.experiment.repository.SessionRepository;
 import com.experiment.repository.UserRepository;
 import com.experiment.service.AuthService;
+import com.experiment.service.UserService;
 import io.javalin.Javalin;
 
 import java.io.InputStream;
@@ -27,6 +28,7 @@ public class App {
         UserRepository userRepo   = new UserRepository(db,logController);
         SessionRepository sessRepo = new SessionRepository(db,logController);
         AuthService authService   = new AuthService(userRepo, sessRepo,logController);
+        UserService userService   = new UserService();
         AuthController controller = new AuthController(authService, logController);
         AdminController adminController = new AdminController(logController);
 

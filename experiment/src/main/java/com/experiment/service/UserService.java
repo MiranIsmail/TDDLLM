@@ -15,7 +15,7 @@ public class UserService {
     private final ObjectMapper mapper = new ObjectMapper();
 
     /**
-     1. TEMPLATE: Authorize Username
+     1. TEMPLATE: Validate Username
      */
     public boolean validateUsername(String username) {
         // Implement validation
@@ -31,7 +31,7 @@ public class UserService {
     }
 
     /**
-     2. TEMPLATE: Authorize Password
+     2. TEMPLATE: Validate Password
      */
     public boolean validatePassword(String password) {
         // Implement validation
