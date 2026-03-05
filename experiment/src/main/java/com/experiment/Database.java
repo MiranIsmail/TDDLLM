@@ -36,7 +36,8 @@ public class Database {
                     username  VARCHAR(100) NOT NULL UNIQUE,
                     password  VARCHAR(255) NOT NULL,
                     logged_time INT UNSIGNED DEFAULT 0,
-                    user_role  VARCHAR(32) NOT NULL DEFAULT 'USER',                    
+                    user_role  VARCHAR(32) NOT NULL DEFAULT 'USER',
+                    hourly_wage FLOAT UNSIGNED DEFAULT 0,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             """);
@@ -53,6 +54,7 @@ public class Database {
             stmt.execute("""
                 CREATE TABLE IF NOT EXISTS data (
                     user_id    INTEGER NOT NULL,
+                    daily_salary FLOAT UNSIGNED DEFAULT 0,
                     start_time TIMESTAMP NOT NULL,
                     end_time TIMESTAMP,
                     FOREIGN KEY (user_id) REFERENCES users(id)

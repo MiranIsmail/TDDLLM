@@ -3,6 +3,7 @@ package com.experiment.model;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,35 +40,48 @@ public class User {
     public void setUsername(String username) { this.username = username; }
     public void setPassword(String password) { this.password = password; }
 
-    public static String stringifyUser(int id, String username, long loggedTime, List<String> starts, List<String> ends) {
+    /**
+     * VERSION A: For Admin Page (Full data)
+     */
+    public static String stringifyUser(int id, String username, long loggedTime, double totalPay, List<Double> sessionPays, List<String> starts, List<String> ends) {
         StringBuilder json = new StringBuilder();
 
         json.append("{\n");
         json.append("  \"id\": ").append(id).append(",\n");
         json.append("  \"username\": \"").append(username).append("\",\n");
         json.append("  \"logged_time\": ").append(loggedTime).append(",\n");
+        json.append("  \"daily_paycheck\": \"").append(String.format("%.2f", totalPay)).append("\",\n");
         json.append("  \"sessions\": [\n");
 
         for (int i = 0; i < starts.size(); i++) {
             String startTime = starts.get(i);
             String endTime = (i < ends.size() && ends.get(i) != null) ? ends.get(i) : "";
+            double sPay = (i < sessionPays.size()) ? sessionPays.get(i) : 0.00;
 
             json.append("    {\n");
             json.append("      \"start_time\": \"").append(startTime).append("\",\n");
-            json.append("      \"end_time\": \"").append(endTime).append("\"\n");
+            json.append("      \"end_time\": \"").append(endTime).append("\",\n");
+            json.append("      \"session_pay\": \"").append(String.format("%.2f", sPay)).append("\"\n");
             json.append("    }");
 
-            if (i < starts.size() - 1) {
-                json.append(",");
-            }
+            if (i < starts.size() - 1) json.append(",");
             json.append("\n");
         }
 
         json.append("  ]\n");
         json.append("}");
-
         return json.toString();
     }
+
+    /**
+     * VERSION B: For User Page (Minimal data)
+     * This calls Version A internally with empty/zero values for pay.
+     */
+    public static String stringifyUser(int id, String username, long loggedTime, List<String> starts, List<String> ends) {
+        // We pass 0.0 for totalPay and an empty list for sessionPays
+        return stringifyUser(id, username, loggedTime, 0.0, new ArrayList<>(), starts, ends);
+    }
+
     public static long calculateTotalLoggedTime(List<String> starts, List<String> ends) {
         long totalSeconds = 0;
         // The format matching your DB: "2026-03-02 08:00:00"
