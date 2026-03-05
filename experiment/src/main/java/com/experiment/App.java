@@ -40,6 +40,8 @@ public class App {
         // --- ROUTES ---
         app.get("/api/admin/users", adminController::handleLoad);
         app.post("/api/admin/override", adminController::handleOverride);
+        app.post("/api/admin/set-wage", adminController::handleSetWage);
+        app.post("/api/admin/payout", adminController::handlePayout);
         app.get("/", ctx -> serveStatic(ctx, "/login.html"));
         UserController userController = new UserController(logController);
         app.post("/api/start", userController::handleStart);

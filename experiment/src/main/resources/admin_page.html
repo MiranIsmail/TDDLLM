@@ -6,7 +6,6 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
         :root {
             --bg:        #0d0f0e;
             --surface:   #141816;
@@ -21,78 +20,90 @@
             --inactive:  #1f2421;
             --overlay:   rgba(0, 0, 0, 0.85);
         }
-
         body { background: var(--bg); font-family: 'IBM Plex Mono', monospace; color: var(--text-main); margin: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* ── Topbar ── */
         .topbar { height: 48px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 20px; flex-shrink: 0; }
         .topbar-title { font-size: 11px; letter-spacing: 0.1em; color: var(--text-mid); text-transform: uppercase; }
         .topbar-title span { color: var(--accent); }
 
-        .btn-logout {
-            color: var(--accent);
-            background: transparent;
-            font-size: 10px;
-            font-family: inherit;
-            border: 1px solid var(--accent-dim);
-            padding: 4px 12px;
-            border-radius: 3px;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-transform: uppercase;
+        /* ── Custom Modal ── */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--overlay);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(4px);
         }
-        .btn-logout:hover { background: rgba(61, 220, 132, 0.1); border-color: var(--accent); }
+        .modal-content {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            width: 440px;
+            padding: 30px;
+            border-radius: 4px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .modal-title { font-size: 14px; margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; }
+        .modal-text { color: var(--text-mid); font-size: 12px; margin-bottom: 25px; line-height: 1.6; white-space: pre-line; }
+        .modal-actions { display: flex; gap: 15px; justify-content: center; }
+
+        .btn-modal { padding: 10px 20px; font-family: inherit; font-size: 11px; text-transform: uppercase; cursor: pointer; border-radius: 3px; font-weight: 600; transition: 0.2s; border: none; }
+        .btn-confirm-red { background: var(--red); color: #000; }
+        .btn-confirm-yellow { background: var(--yellow); color: #000; }
+        .btn-cancel { background: transparent; color: var(--text-main); border: 1px solid var(--border); }
+        .btn-cancel:hover { background: var(--border); }
 
         /* ── Layout ── */
         .app-body { display: flex; flex: 1; overflow: hidden; }
         .main-view { flex: 1; padding: 40px; overflow-y: auto; }
+        .sidebar { width: 340px; background: var(--surface); border-left: 1px solid var(--border); padding: 24px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; }
 
-        /* ── Sidebar ── */
-        .sidebar { width: 340px; background: var(--surface); border-left: 1px solid var(--border); padding: 24px; display: flex; flex-direction: column; gap: 30px; overflow-y: auto; }
-        .sidebar-section-title { font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-        .override-box { border: 1px dashed var(--yellow); padding: 15px; border-radius: 4px; display: flex; flex-direction: column; gap: 15px; }
-        .sidebar-field label { display: block; font-size: 9px; margin-bottom: 5px; color: var(--text-mid); }
+        .sidebar-section-title { font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+        .override-box { border: 1px dashed var(--yellow); padding: 15px; border-radius: 4px; display: flex; flex-direction: column; gap: 12px; }
+        .finance-box { border: 1px dashed var(--red); padding: 15px; border-radius: 4px; display: flex; flex-direction: column; gap: 12px; }
 
+        .sidebar-field label { display: block; font-size: 9px; margin-bottom: 4px; color: var(--text-mid); }
         .sidebar-input { background: var(--bg); border: 1px solid var(--border); color: var(--text-main); padding: 10px; border-radius: 4px; font-family: inherit; font-size: 12px; outline: none; width: 100%; }
-        .btn-commit { background: var(--yellow); color: #000; border: none; padding: 12px; font-weight: 600; cursor: pointer; border-radius: 3px; text-transform: uppercase; font-size: 11px; width: 100%; transition: opacity 0.2s; }
-        .btn-commit:hover { opacity: 0.9; }
 
-        /* ── Tables ── */
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+
+        .btn-action { border: none; padding: 12px; font-weight: 600; cursor: pointer; border-radius: 3px; text-transform: uppercase; font-size: 11px; width: 100%; transition: 0.2s; }
+        .btn-yellow { background: var(--yellow); color: #000; }
+        .btn-red { background: var(--red); color: #000; }
+
         .table-container { border: 1px solid var(--border); background: var(--surface); border-radius: 4px; overflow: hidden; }
         table { width: 100%; border-collapse: collapse; font-size: 11px; }
-        th { text-align: left; padding: 12px; color: var(--accent); background: var(--border); text-transform: uppercase; letter-spacing: 0.1em; }
+        th { text-align: left; padding: 12px; color: var(--accent); background: var(--border); text-transform: uppercase; }
         td { padding: 12px; border-bottom: 1px solid var(--border); color: var(--text-mid); }
-
-        .user-row { cursor: pointer; transition: background 0.1s; }
+        .user-row { cursor: pointer; }
         .user-row:hover { background: rgba(61, 220, 132, 0.05); }
-        .user-row td { color: var(--text-main); }
-
-        .user-row.active .chevron { transform: rotate(180deg); fill: var(--accent); }
-        .chevron { width: 12px; height: 12px; fill: var(--text-mid); transition: transform 0.3s ease; }
-
-        /* ── Dropdown Sessions ── */
-        .session-container { display: none; background: #0a0c0b; }
-        .session-row { cursor: pointer; transition: all 0.2s; }
-        .session-row:hover { background: var(--border); color: var(--yellow); }
-        .session-row td:first-child { padding-left: 40px; position: relative; }
-        .session-row td:first-child::before { content: '└'; position: absolute; left: 20px; color: var(--border); }
-
         .status-badge { font-size: 9px; padding: 2px 6px; border-radius: 2px; font-weight: 600; }
         .status-active { background: var(--accent-dim); color: var(--accent); }
-        .status-inactive { background: var(--inactive); color: var(--text-mid); }
-
-        /* ── Messaging ── */
-        #system-msg { font-size: 10px; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 2px; display: none; border-left: 2px solid; }
-        .msg-success { color: var(--accent); border-color: var(--accent); }
-        .msg-error { color: var(--red); border-color: var(--red); }
+        .chevron { width: 12px; height: 12px; fill: var(--text-mid); transition: 0.3s; }
+        .user-row.active .chevron { transform: rotate(180deg); }
+        .session-container { display: none; background: #0a0c0b; }
+        #system-msg { font-size: 10px; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 2px; display: none; margin-top: 10px; }
     </style>
 </head>
 <body>
 
+<div id="confirm-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div id="modal-title" class="modal-title">TITLE</div>
+        <div id="modal-text" class="modal-text">Description...</div>
+        <div class="modal-actions">
+            <button class="btn-modal btn-cancel" onclick="closeModal()">Cancel</button>
+            <button id="modal-confirm-btn" class="btn-modal">Confirm</button>
+        </div>
+    </div>
+</div>
+
 <header class="topbar">
     <div class="topbar-title">SYSTEM // <span>ADMIN_CONSOLE</span></div>
-    <div style="flex: 1;"></div>
-    <button class="btn-logout" onclick="location.href='/login'">Logout // Terminate →</button>
 </header>
 
 <div class="app-body">
@@ -106,7 +117,7 @@
                     <th style="width: 20%;">Latest Start</th>
                     <th style="width: 20%;">Latest End</th>
                     <th style="width: 12%;">Logged Time</th>
-                    <th style="width: 15%;">Total Pay</th>
+                    <th style="width: 15%;">Unpaid Balance</th>
                     <th style="width: 15%;">Status</th>
                 </tr>
                 </thead>
@@ -118,26 +129,25 @@
     <nav class="sidebar">
         <div class="sidebar-section">
             <div class="sidebar-section-title">Search User</div>
-            <input type="text" id="search-input" class="sidebar-input" placeholder="Search user database..." oninput="filterUsers()">
+            <input type="text" id="search-input" class="sidebar-input" placeholder="Search users..." oninput="filterUsers()">
         </div>
 
         <div class="override-box">
-            <div class="sidebar-section-title" style="color:var(--yellow); border-color: rgba(240,192,64,0.3); margin-bottom:0;">Override</div>
-            <div class="sidebar-field">
-                <label>TARGET USER</label>
-                <input type="text" id="target-user" class="sidebar-input" readonly placeholder="Select a session...">
-            </div>
-            <div class="sidebar-field">
-                <label>START TIMESTAMP</label>
-                <input type="text" id="target-start" class="sidebar-input">
-            </div>
-            <div class="sidebar-field">
-                <label>END TIMESTAMP</label>
-                <input type="text" id="target-stop" class="sidebar-input">
-            </div>
-            <div id="system-msg"></div>
-            <button class="btn-commit" onclick="commitChanges()">Commit Changes</button>
+            <div class="sidebar-section-title" style="color:var(--yellow);">Override</div>
+            <div class="sidebar-field"><label>TARGET USER</label><input type="text" id="target-user-ovr" class="sidebar-input" readonly></div>
+            <div class="sidebar-field"><label>START</label><input type="text" id="target-start" class="sidebar-input"></div>
+            <div class="sidebar-field"><label>END</label><input type="text" id="target-stop" class="sidebar-input"></div>
+            <button class="btn-action btn-yellow" onclick="promptOverride()">Commit Changes</button>
         </div>
+
+        <div class="finance-box">
+            <div class="sidebar-section-title" style="color:var(--red);">Financial Control</div>
+            <div class="sidebar-field"><label>TARGET USER</label><input type="text" id="target-user-fin" class="sidebar-input" readonly></div>
+            <div class="sidebar-field"><label>HOURLY WAGE ($)</label><input type="number" id="hourly-wage" class="sidebar-input" placeholder="0.00"></div>
+            <button class="btn-action btn-yellow" style="margin-bottom: 5px;" onclick="promptAssignWage()">Assign Wage</button>
+            <button class="btn-action btn-red" onclick="promptPayout()">Payout Balance →</button>
+        </div>
+        <div id="system-msg"></div>
     </nav>
 </div>
 
@@ -149,10 +159,29 @@
             const response = await fetch('/api/admin/users');
             userData = await response.json();
             renderTable(userData);
-        } catch (err) {
-            console.error("Sync Error", err);
-        }
+        } catch (err) { console.error(err); }
     };
+
+    function showStatus(text, isError = false) {
+        const msg = document.getElementById('system-msg');
+        msg.innerText = `> ${text}`;
+        msg.style.display = 'block';
+        msg.style.color = isError ? 'var(--red)' : 'var(--accent)';
+        setTimeout(() => { msg.style.display = 'none'; }, 4000);
+    }
+
+    /* ── Modal Control ── */
+    function openModal(title, text, confirmClass, onConfirm) {
+        const titleEl = document.getElementById('modal-title');
+        titleEl.innerText = title;
+        titleEl.style.color = confirmClass.includes('yellow') ? 'var(--yellow)' : 'var(--red)';
+        document.getElementById('modal-text').innerText = text;
+        const confirmBtn = document.getElementById('modal-confirm-btn');
+        confirmBtn.className = `btn-modal ${confirmClass}`;
+        confirmBtn.onclick = () => { onConfirm(); closeModal(); };
+        document.getElementById('confirm-modal').style.display = 'flex';
+    }
+    function closeModal() { document.getElementById('confirm-modal').style.display = 'none'; }
 
     function formatSeconds(seconds) {
         if (!seconds || seconds <= 0) return "0h 0m 0s";
@@ -162,21 +191,12 @@
         return `${h}h ${m}m ${s}s`;
     }
 
-    function showStatus(text, isError = false) {
-        const msg = document.getElementById('system-msg');
-        msg.innerText = `> ${text}`;
-        msg.style.display = 'block';
-        msg.className = isError ? 'msg-error' : 'msg-success';
-        setTimeout(() => { msg.style.display = 'none'; }, 4000);
-    }
-
     function renderTable(dataToRender) {
         const body = document.getElementById('admin-table-body');
         body.innerHTML = dataToRender.map((user, uIndex) => {
             const sessions = user.sessions || [];
             const latest = sessions.length > 0 ? sessions[0] : { start_time: "--:--:--", end_time: "" };
             const isActive = latest.end_time === "";
-
             return `
                 <tr class="user-row" id="user-row-${uIndex}" onclick="toggleSessions(${uIndex})">
                     <td>${user.username}</td>
@@ -194,13 +214,13 @@
                         <table style="width: 100%; border: none;">
                             <tbody>
                                 ${sessions.map((s, sIdx) => `
-                                    <tr class="session-row" onclick="loadToSidebar(${uIndex}, ${sIdx})">
+                                    <tr class="session-row" onclick="loadSessionToSidebar(${uIndex}, ${sIdx})">
                                         <td style="width: 15%;"></td>
                                         <td style="width: 20%;">${s.start_time}</td>
                                         <td style="width: 20%;">${s.end_time || "--:--:--"}</td>
                                         <td style="width: 12%;"></td>
                                         <td style="width: 15%; color: var(--accent); font-weight:500;">$${s.session_pay}</td>
-                                        <td style="width: 15%; color: var(--yellow); text-align:right; font-size:9px; padding-right:20px;">[SELECT]</td>
+                                        <td style="width: 15%; color:var(--yellow); text-align:right; padding-right:20px; font-size:9px;">[SELECT_TIME]</td>
                                     </tr>
                                 `).join('')}
                             </tbody>
@@ -213,47 +233,103 @@
     function toggleSessions(index) {
         const el = document.getElementById(`sessions-${index}`);
         const row = document.getElementById(`user-row-${index}`);
-        if(!el) return;
+        const user = userData[index];
         const isVisible = el.style.display === 'table-row';
+
+        document.getElementById('target-user-ovr').value = user.username;
+        document.getElementById('target-user-fin').value = user.username;
+        document.getElementById('hourly-wage').value = user.hourly_wage || "";
+        document.getElementById('target-start').value = "";
+        document.getElementById('target-stop').value = "";
+
         el.style.display = isVisible ? 'none' : 'table-row';
         if (isVisible) row.classList.remove('active'); else row.classList.add('active');
     }
 
-    function filterUsers() {
-        const query = document.getElementById('search-input').value.toLowerCase();
-        const filtered = userData.filter(u => u.username.toLowerCase().includes(query));
-        renderTable(filtered);
-    }
-
-    function loadToSidebar(uIndex, sIndex) {
+    function loadSessionToSidebar(uIndex, sIndex) {
         window.event.stopPropagation();
-        const user = userData[uIndex];
-        const session = user.sessions[sIndex];
-        document.getElementById('target-user').value = user.username;
+        const session = userData[uIndex].sessions[sIndex];
         document.getElementById('target-start').value = session.start_time;
         document.getElementById('target-stop').value = session.end_time || "";
     }
 
-    async function commitChanges() {
+    /* ── Action Prompts (RESTORED TEXT) ── */
+
+    function promptOverride() {
+        const user = document.getElementById('target-user-ovr').value;
+        const start = document.getElementById('target-start').value;
+        const stop = document.getElementById('target-stop').value;
+        if(!user || !start) return showStatus("MISSING DATA", true);
+
+        const message = `Are you sure you want to update the timestamps for ${user}?\n\nSTART: ${start}\nEND: ${stop || "IN_PROGRESS"}`;
+        openModal("DB_OVERRIDE", message, "btn-confirm-yellow", executeOverride);
+    }
+
+    function promptAssignWage() {
+        const user = document.getElementById('target-user-fin').value;
+        const wage = document.getElementById('hourly-wage').value;
+        if(!user || !wage) return showStatus("MISSING DATA", true);
+
+        const message = `Are you sure you want to change the hourly wage for ${user} to $${wage}/hr?\n\nThis will affect future calculations for this user.`;
+        openModal("CHANGE_WAGE", message, "btn-confirm-yellow", executeAssignWage);
+    }
+
+    function promptPayout() {
+        const user = document.getElementById('target-user-fin').value;
+        if(!user) return showStatus("NO USER SELECTED", true);
+
+        const message = `Are you sure you want to execute a payout for ${user}?\n\nThis action will reset their unpaid balance to zero.`;
+        openModal("EXECUTE_PAYOUT", message, "btn-confirm-red", executePayout);
+    }
+
+    /* ── API Execution ── */
+
+    async function executeOverride() {
         const payload = {
-            user: document.getElementById('target-user').value,
+            user: document.getElementById('target-user-ovr').value,
             start: document.getElementById('target-start').value,
             stop: document.getElementById('target-stop').value
         };
-
-        if(!payload.user) { showStatus("ERROR: NO_USER_SELECTED", true); return; }
-
         try {
-            const response = await fetch('/api/admin/override', {
+            const res = await fetch('/api/admin/override', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(payload)
             });
-            if (response.ok) showStatus("COMMAND_EXECUTED: DB_UPDATED");
-            else showStatus("ERROR: SERVER_REJECTED", true);
-        } catch (err) {
-            showStatus("CRITICAL: NETWORK_FAILURE", true);
-        }
+            if(res.ok) showStatus("OVERRIDE EXECUTED"); else showStatus("ERROR: REJECTED", true);
+        } catch(e) { showStatus("NETWORK FAILURE", true); }
+    }
+
+    async function executeAssignWage() {
+        const payload = {
+            username: document.getElementById('target-user-fin').value,
+            new_wage: parseFloat(document.getElementById('hourly-wage').value)
+        };
+        try {
+            const res = await fetch('/api/admin/set-wage', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+            if(res.ok) showStatus("WAGE UPDATED"); else showStatus("ERROR: REJECTED", true);
+        } catch(e) { showStatus("NETWORK FAILURE", true); }
+    }
+
+    async function executePayout() {
+        const payload = { username: document.getElementById('target-user-fin').value };
+        try {
+            const res = await fetch('/api/admin/payout', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+            if(res.ok) showStatus("PAYOUT SUCCESSFUL"); else showStatus("ERROR: REJECTED", true);
+        } catch(e) { showStatus("NETWORK FAILURE", true); }
+    }
+
+    function filterUsers() {
+        const query = document.getElementById('search-input').value.toLowerCase();
+        renderTable(userData.filter(u => u.username.toLowerCase().includes(query)));
     }
 </script>
 </body>

@@ -43,13 +43,14 @@ public class User {
     /**
      * VERSION A: For Admin Page (Full data)
      */
-    public static String stringifyUser(int id, String username, long loggedTime, double totalPay, List<Double> sessionPays, List<String> starts, List<String> ends) {
+    public static String stringifyUser(int id, String username, long loggedTime, double totalPay, double hourlyWage, List<Double> sessionPays, List<String> starts, List<String> ends) {
         StringBuilder json = new StringBuilder();
 
         json.append("{\n");
         json.append("  \"id\": ").append(id).append(",\n");
         json.append("  \"username\": \"").append(username).append("\",\n");
         json.append("  \"logged_time\": ").append(loggedTime).append(",\n");
+        json.append("  \"hourly_wage\": \"").append(String.format("%.2f", hourlyWage)).append("\",\n"); // Added this
         json.append("  \"daily_paycheck\": \"").append(String.format("%.2f", totalPay)).append("\",\n");
         json.append("  \"sessions\": [\n");
 
@@ -79,7 +80,7 @@ public class User {
      */
     public static String stringifyUser(int id, String username, long loggedTime, List<String> starts, List<String> ends) {
         // We pass 0.0 for totalPay and an empty list for sessionPays
-        return stringifyUser(id, username, loggedTime, 0.0, new ArrayList<>(), starts, ends);
+        return stringifyUser(id, username, loggedTime, 0.0,0.0, new ArrayList<>(), starts, ends);
     }
 
     public static long calculateTotalLoggedTime(List<String> starts, List<String> ends) {
