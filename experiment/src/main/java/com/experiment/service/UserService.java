@@ -62,4 +62,14 @@ public class UserService {
         }
         return true;
     }
+    /**
+     5. TEMPLATE: Here take in the logged hour and
+     subtract lunch if we have a full days work.
+     example: a 9 to 17 shift is only 7 hours of work because of 1 hour lunch
+     */
+    public int calculateRealWorkedHours(int loggedTime) {
+        // Implement logic
+
+        return 0; //placeholder
+    }
 }

@@ -10,12 +10,14 @@ the file is created automatically on first run.
 ## 1 — Install Prerequisites
 
 ### Linux (Debian/Ubuntu)
+
 ```bash
 sudo apt update
 sudo apt install -y openjdk-17-jdk maven
 ```
 
 ### macOS
+
 ```bash
 # Install Homebrew first if you don't have it:
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -25,11 +27,13 @@ brew install openjdk@17 maven
 ```
 
 ### Windows
-1. Download and install **Java 17 JDK** from https://adoptium.net  
+
+1. Download and install **Java 17 JDK** from <https://adoptium.net>  
    During installation, tick "Set JAVA_HOME variable".
-2. Download **Maven** from https://maven.apache.org/download.cgi  
+2. Download **Maven** from <https://maven.apache.org/download.cgi>  
    Unzip it, then add the `bin` folder to your `PATH` environment variable.
 3. Open a new terminal (PowerShell or Git Bash) and verify:
+
    ```
    java -version
    mvn -version
@@ -56,9 +60,10 @@ mvn compile
 mvn exec:java -Dexec.mainClass="com.experiment.App"
 ```
 
-The server starts on **http://localhost:8080**.
+The server starts on **<http://localhost:8080>**.
 
 Open your browser to:
+
 - `http://localhost:8080/login`    — login page
 - `http://localhost:8080/register` — registration page
 - `http://localhost:8080/admin`    — admin panel (static demo data)
@@ -84,7 +89,12 @@ It does **not** install anything — install Java and Maven first (see above).
 bash install_check.sh
 ```
 
-The script (`install_check.sh`) is in the `experiment/` directory alongside this file.
+The script (`install_check.sh`) is in this directory alongside this file.
+Note that you may have to give the bash file execution permission
+
+```bash
+chmod +x install_check.sh
+```
 
 ---
 

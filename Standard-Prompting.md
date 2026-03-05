@@ -18,8 +18,7 @@
 ### E2S5 - As a User i can not edit my time logs.
 ### E2S6 - As a signed in User i can ONLY access the User page and not other pages such as admin, login and register.
 ### E2S7 - As a signed in User i can logout.
-
-### E2S8 - As a signed in USer i am not allowed to work more than 5 hours without a break 30 minutes break.
+### E2S8 - As a signed in User i am not allowed to work more than 5 hours without a break 30 minutes break.
 
 # Admin Story
 ## E3 - As an Admin I can log in to the website so that i can administrate users logs and their pay check, and i can also see my log time and log new time as well as logout.
@@ -32,9 +31,9 @@
 ### E3S7 - As a signed in Admin i can logout.
 ### E3S8 - As an Admin i can access the admin page and view every Users time logs.
 ### E3S9 - As an Admin i can access the admin page and elevate an existing User to Admin level.
-
 ### E3S10 - As an Admin i can assign Users hourly wage
 ### E3S11 - As an Admin i can view Users total paycheck but also their daily paycheck
+### E3S12 - As an Admin i can issue payout for a user, the payout is for total accumulated hours.
 
 
 

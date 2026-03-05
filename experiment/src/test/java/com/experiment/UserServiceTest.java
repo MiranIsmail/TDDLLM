@@ -36,4 +36,9 @@ public class UserServiceTest {
     void validUsernameIsAccepted() {
         assertThat(userService.validateUsername("alice")).isTrue();
     }
+
+    @Test // Not a real test, just an example
+    void realWorkedHoursIsNotZero() {
+        assertThat(userService.calculateRealWorkedHours(8)==7 ).isFalse();
+    }
 }

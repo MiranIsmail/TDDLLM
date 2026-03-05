@@ -58,4 +58,12 @@ public class UserRepository {
         logController.log("Database: findById has been run in UserRepository, the input parameter was"+id);
         return Optional.empty();
     }
+    /**
+    * Save the logged hours of a user
+     * see also UserService.calculateRealWorkedHours
+     */
+    public void saveLoggedHours() {
+        // TODO: implement
+        logController.log("Database: Save Logged hours has been run in UserRepository, the input parameters was");
+    }
 }
