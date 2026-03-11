@@ -1,3 +1,11 @@
+# Welcome!
+
+Thank you for taking part in this experiment! The goal of this study is to explore how different development approaches affect the outcome of LLM-generated code.
+
+You are part of **Group A**. Your task is to build a time-logging web application with authentication, role-based access, and admin functionality. You'll be following a modified Test-Driven Development (TDD) process — this means you'll write tests by hand first and then ask the LLM to generate the code that makes those tests pass, following a Red, Green, Blue cycle.
+
+Everything you need to get started is described below. Please read through the user stories and instructions carefully before you begin, and don't forget to run the provided bash scripts after each phase so we can track your progress. Good luck, and have fun!
+
 # Goals
 ## G1 - Secure authentication and Role-Based Access Control.
 ## G2 - Accurate recording of work hours with data integrity.

@@ -1,3 +1,11 @@
+# Welcome!
+
+Thank you for taking part in this experiment! The goal of this study is to explore how different development approaches affect the outcome of LLM-generated code.
+
+You are part of **Group B**. Your task is to build a time-logging web application with authentication, role-based access, and admin functionality. You'll be prompting the LLM to implement the features directly. You can take inspiration from the provided LLM guidelines on how to structure your prompts and interact with the model. Just make sure all the described functionality ends up implemented.
+
+Everything you need to get started is described below. Please read through the user stories and instructions carefully before you begin. Good luck, and have fun!
+
 # Goals
 ## G1 - Secure authentication and Role-Based Access Control.
 ## G2 - Accurate recording of work hours with data integrity.

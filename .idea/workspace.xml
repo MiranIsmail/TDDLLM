@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="ac6a1518-735e-464d-9f99-232f0daed4b1" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/.idea/experiment(4).iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/START_HERE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/auth-experiment.db" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/auth-experiment.mv.db" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/auth-experiment.trace.db" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/SURVEY.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/blue.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/green.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/red.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/setup.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/src/main/java/com/experiment/App.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/src/main/java/com/experiment/Database.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/src/main/java/com/experiment/controller/AdminController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/src/main/java/com/experiment/controller/AuthController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/src/main/java/com/experiment/controller/LogController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/src/main/java/com/experiment/controller/UserController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/src/main/java/com/experiment/model/Levels.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/src/main/java/com/experiment/model/LogEntry.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/src/main/java/com/experiment/model/Session.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/src/main/java/com/experiment/model/User.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/src/main/java/com/experiment/repository/SessionRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/src/main/java/com/experiment/repository/UserRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/src/main/java/com/experiment/service/AuthService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/src/main/java/com/experiment/service/UserService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/src/main/resources/admin_page.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/src/main/resources/header.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/src/main/resources/login.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/src/main/resources/register.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/src/main/resources/user_page.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/src/test/java/com/experiment/AuthServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/src/test/java/com/experiment/LoginTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/src/test/java/com/experiment/LogoutTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/src/test/java/com/experiment/RegistrationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/src/test/java/com/experiment/SessionTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/experiment/src/test/java/com/experiment/UserServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Standard-Prompt/install_check.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/.idea/experiment(4).iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/START_HERE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/auth-experiment.db" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/auth-experiment.mv.db" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/auth-experiment.trace.db" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/SURVEY.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/blue.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/green.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/red.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/setup.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/src/main/java/com/experiment/App.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/src/main/java/com/experiment/Database.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/src/main/java/com/experiment/controller/AdminController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/src/main/java/com/experiment/controller/AuthController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/src/main/java/com/experiment/controller/LogController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/src/main/java/com/experiment/controller/UserController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/src/main/java/com/experiment/model/Levels.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/src/main/java/com/experiment/model/LogEntry.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/src/main/java/com/experiment/model/Session.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/src/main/java/com/experiment/model/User.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/src/main/java/com/experiment/repository/SessionRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/src/main/java/com/experiment/repository/UserRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/src/main/java/com/experiment/service/AuthService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/src/main/java/com/experiment/service/UserService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/src/main/resources/admin_page.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/src/main/resources/header.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/src/main/resources/login.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/src/main/resources/register.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/src/main/resources/user_page.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/src/test/java/com/experiment/AuthServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/src/test/java/com/experiment/LoginTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/src/test/java/com/experiment/LogoutTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/src/test/java/com/experiment/RegistrationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/src/test/java/com/experiment/SessionTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/experiment/src/test/java/com/experiment/UserServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TDD/install_check.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/experiment(4).iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Standard-Prompting.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TDD+LLM.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-experiment.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-experiment.mv.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-experiment.trace.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/SURVEY.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/blue.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/green.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/red.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/setup.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/src/main/java/com/experiment/App.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/src/main/java/com/experiment/Database.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/src/main/java/com/experiment/controller/AdminController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/src/main/java/com/experiment/controller/AuthController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/src/main/java/com/experiment/controller/LogController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/src/main/java/com/experiment/controller/UserController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/src/main/java/com/experiment/model/Levels.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/src/main/java/com/experiment/model/LogEntry.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/src/main/java/com/experiment/model/Session.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/src/main/java/com/experiment/model/User.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/src/main/java/com/experiment/repository/SessionRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/src/main/java/com/experiment/repository/UserRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/src/main/java/com/experiment/service/AuthService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/src/main/java/com/experiment/service/UserService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/src/main/resources/admin_page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/src/main/resources/header.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/src/main/resources/login.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/src/main/resources/register.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/src/main/resources/user_page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/src/test/java/com/experiment/AuthServiceTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/src/test/java/com/experiment/LoginTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/src/test/java/com/experiment/LogoutTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/src/test/java/com/experiment/RegistrationTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/src/test/java/com/experiment/SessionTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/src/test/java/com/experiment/UserServiceTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/install_check.sh" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 3
+}]]></component>
+  <component name="ProjectId" id="3AnVm2vwRiVQ1sRM2I2sTYnH0fu" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/felix/Desktop/skola/TDDLLM"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.31033.145" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ac6a1518-735e-464d-9f99-232f0daed4b1" name="Changes" comment="" />
+      <created>1773228476252</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1773228476252</updated>
+    </task>
+    <servers />
+  </component>
+</project>

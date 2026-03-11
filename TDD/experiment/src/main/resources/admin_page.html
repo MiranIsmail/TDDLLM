@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Terminal Admin // Root</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg:        #0d0f0e;
+            --surface:   #141816;
+            --border:    #1f2421;
+            --accent:    #3ddc84;
+            --accent-dim: #1e6e42;
+            --yellow:    #f0c040;
+            --red:       #ff5c5c;
+            --red-dim:   #4a1c1c;
+            --text-mid:  #8faa96;
+            --text-main: #c8d8cc;
+            --inactive:  #1f2421;
+            --overlay:   rgba(0, 0, 0, 0.85);
+        }
+        body { background: var(--bg); font-family: 'IBM Plex Mono', monospace; color: var(--text-main); margin: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+        .topbar { height: 48px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 20px; flex-shrink: 0; }
+        .topbar-title { font-size: 11px; letter-spacing: 0.1em; color: var(--text-mid); text-transform: uppercase; }
+        .topbar-title span { color: var(--accent); }
+
+        /* ── Custom Modal ── */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--overlay);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(4px);
+        }
+        .modal-content {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            width: 440px;
+            padding: 30px;
+            border-radius: 4px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .modal-title { font-size: 14px; margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; }
+        .modal-text { color: var(--text-mid); font-size: 12px; margin-bottom: 25px; line-height: 1.6; white-space: pre-line; }
+        .modal-actions { display: flex; gap: 15px; justify-content: center; }
+
+        .btn-modal { padding: 10px 20px; font-family: inherit; font-size: 11px; text-transform: uppercase; cursor: pointer; border-radius: 3px; font-weight: 600; transition: 0.2s; border: none; }
+        .btn-confirm-red { background: var(--red); color: #000; }
+        .btn-confirm-yellow { background: var(--yellow); color: #000; }
+        .btn-cancel { background: transparent; color: var(--text-main); border: 1px solid var(--border); }
+        .btn-cancel:hover { background: var(--border); }
+
+        /* ── Layout ── */
+        .app-body { display: flex; flex: 1; overflow: hidden; }
+        .main-view { flex: 1; padding: 40px; overflow-y: auto; }
+        .sidebar { width: 340px; background: var(--surface); border-left: 1px solid var(--border); padding: 24px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; }
+
+        .sidebar-section-title { font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+        .override-box { border: 1px dashed var(--yellow); padding: 15px; border-radius: 4px; display: flex; flex-direction: column; gap: 12px; }
+        .finance-box { border: 1px dashed var(--red); padding: 15px; border-radius: 4px; display: flex; flex-direction: column; gap: 12px; }
+
+        .sidebar-field label { display: block; font-size: 9px; margin-bottom: 4px; color: var(--text-mid); }
+        .sidebar-input { background: var(--bg); border: 1px solid var(--border); color: var(--text-main); padding: 10px; border-radius: 4px; font-family: inherit; font-size: 12px; outline: none; width: 100%; }
+
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+
+        .btn-action { border: none; padding: 12px; font-weight: 600; cursor: pointer; border-radius: 3px; text-transform: uppercase; font-size: 11px; width: 100%; transition: 0.2s; }
+        .btn-yellow { background: var(--yellow); color: #000; }
+        .btn-red { background: var(--red); color: #000; }
+
+        .table-container { border: 1px solid var(--border); background: var(--surface); border-radius: 4px; overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; font-size: 11px; }
+        th { text-align: left; padding: 12px; color: var(--accent); background: var(--border); text-transform: uppercase; }
+        td { padding: 12px; border-bottom: 1px solid var(--border); color: var(--text-mid); }
+        .user-row { cursor: pointer; }
+        .user-row:hover { background: rgba(61, 220, 132, 0.05); }
+        .status-badge { font-size: 9px; padding: 2px 6px; border-radius: 2px; font-weight: 600; }
+        .status-active { background: var(--accent-dim); color: var(--accent); }
+        .chevron { width: 12px; height: 12px; fill: var(--text-mid); transition: 0.3s; }
+        .user-row.active .chevron { transform: rotate(180deg); }
+        .session-container { display: none; background: #0a0c0b; }
+        #system-msg { font-size: 10px; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 2px; display: none; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div id="confirm-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div id="modal-title" class="modal-title">TITLE</div>
+        <div id="modal-text" class="modal-text">Description...</div>
+        <div class="modal-actions">
+            <button class="btn-modal btn-cancel" onclick="closeModal()">Cancel</button>
+            <button id="modal-confirm-btn" class="btn-modal">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<header class="topbar">
+    <div class="topbar-title">SYSTEM // <span>ADMIN_CONSOLE</span></div>
+</header>
+
+<div class="app-body">
+    <main class="main-view">
+        <h2 style="font-size: 18px; margin-bottom: 25px; letter-spacing:0.05em;">VIEW // USERS</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th style="width: 15%;">Username</th>
+                    <th style="width: 20%;">Latest Start</th>
+                    <th style="width: 20%;">Latest End</th>
+                    <th style="width: 12%;">Logged Time</th>
+                    <th style="width: 15%;">Unpaid Balance</th>
+                    <th style="width: 15%;">Status</th>
+                </tr>
+                </thead>
+                <tbody id="admin-table-body"></tbody>
+            </table>
+        </div>
+    </main>
+
+    <nav class="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">Search User</div>
+            <input type="text" id="search-input" class="sidebar-input" placeholder="Search users..." oninput="filterUsers()">
+        </div>
+
+        <div class="override-box">
+            <div class="sidebar-section-title" style="color:var(--yellow);">Override</div>
+            <div class="sidebar-field"><label>TARGET USER</label><input type="text" id="target-user-ovr" class="sidebar-input" readonly></div>
+            <div class="sidebar-field"><label>START</label><input type="text" id="target-start" class="sidebar-input"></div>
+            <div class="sidebar-field"><label>END</label><input type="text" id="target-stop" class="sidebar-input"></div>
+            <button class="btn-action btn-yellow" onclick="promptOverride()">Commit Changes</button>
+        </div>
+
+        <div class="finance-box">
+            <div class="sidebar-section-title" style="color:var(--red);">Financial Control</div>
+            <div class="sidebar-field"><label>TARGET USER</label><input type="text" id="target-user-fin" class="sidebar-input" readonly></div>
+            <div class="sidebar-field"><label>HOURLY WAGE ($)</label><input type="number" id="hourly-wage" class="sidebar-input" placeholder="0.00"></div>
+            <button class="btn-action btn-yellow" style="margin-bottom: 5px;" onclick="promptAssignWage()">Assign Wage</button>
+            <button class="btn-action btn-red" onclick="promptPayout()">Payout Balance →</button>
+        </div>
+        <div id="system-msg"></div>
+    </nav>
+</div>
+
+<script>
+    let userData = [];
+
+    window.onload = async () => {
+        try {
+            const response = await fetch('/api/admin/users');
+            userData = await response.json();
+            renderTable(userData);
+        } catch (err) { console.error(err); }
+    };
+
+    function showStatus(text, isError = false) {
+        const msg = document.getElementById('system-msg');
+        msg.innerText = `> ${text}`;
+        msg.style.display = 'block';
+        msg.style.color = isError ? 'var(--red)' : 'var(--accent)';
+        setTimeout(() => { msg.style.display = 'none'; }, 4000);
+    }
+
+    /* ── Modal Control ── */
+    function openModal(title, text, confirmClass, onConfirm) {
+        const titleEl = document.getElementById('modal-title');
+        titleEl.innerText = title;
+        titleEl.style.color = confirmClass.includes('yellow') ? 'var(--yellow)' : 'var(--red)';
+        document.getElementById('modal-text').innerText = text;
+        const confirmBtn = document.getElementById('modal-confirm-btn');
+        confirmBtn.className = `btn-modal ${confirmClass}`;
+        confirmBtn.onclick = () => { onConfirm(); closeModal(); };
+        document.getElementById('confirm-modal').style.display = 'flex';
+    }
+    function closeModal() { document.getElementById('confirm-modal').style.display = 'none'; }
+
+    function formatSeconds(seconds) {
+        if (!seconds || seconds <= 0) return "0h 0m 0s";
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = Math.floor(seconds % 60);
+        return `${h}h ${m}m ${s}s`;
+    }
+
+    function renderTable(dataToRender) {
+        const body = document.getElementById('admin-table-body');
+        body.innerHTML = dataToRender.map((user, uIndex) => {
+            const sessions = user.sessions || [];
+            const latest = sessions.length > 0 ? sessions[0] : { start_time: "--:--:--", end_time: "" };
+            const isActive = latest.end_time === "";
+            return `
+                <tr class="user-row" id="user-row-${uIndex}" onclick="toggleSessions(${uIndex})">
+                    <td>${user.username}</td>
+                    <td>${latest.start_time}</td>
+                    <td>${isActive ? "--:--:--" : latest.end_time}</td>
+                    <td>${formatSeconds(user.logged_time)}</td>
+                    <td style="color: var(--yellow); font-weight: 600;">$${user.daily_paycheck}</td>
+                    <td class="status-cell">
+                        <span class="status-badge ${isActive ? 'status-active' : 'status-inactive'}">${isActive ? 'ACTIVE' : 'INACTIVE'}</span>
+                        <svg class="chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                    </td>
+                </tr>
+                <tr id="sessions-${uIndex}" class="session-container">
+                    <td colspan="6" style="padding: 0;">
+                        <table style="width: 100%; border: none;">
+                            <tbody>
+                                ${sessions.map((s, sIdx) => `
+                                    <tr class="session-row" onclick="loadSessionToSidebar(${uIndex}, ${sIdx})">
+                                        <td style="width: 15%;"></td>
+                                        <td style="width: 20%;">${s.start_time}</td>
+                                        <td style="width: 20%;">${s.end_time || "--:--:--"}</td>
+                                        <td style="width: 12%;"></td>
+                                        <td style="width: 15%; color: var(--accent); font-weight:500;">$${s.session_pay}</td>
+                                        <td style="width: 15%; color:var(--yellow); text-align:right; padding-right:20px; font-size:9px;">[SELECT_TIME]</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>`;
+        }).join('');
+    }
+
+    function toggleSessions(index) {
+        const el = document.getElementById(`sessions-${index}`);
+        const row = document.getElementById(`user-row-${index}`);
+        const user = userData[index];
+        const isVisible = el.style.display === 'table-row';
+
+        document.getElementById('target-user-ovr').value = user.username;
+        document.getElementById('target-user-fin').value = user.username;
+        document.getElementById('hourly-wage').value = user.hourly_wage || "";
+        document.getElementById('target-start').value = "";
+        document.getElementById('target-stop').value = "";
+
+        el.style.display = isVisible ? 'none' : 'table-row';
+        if (isVisible) row.classList.remove('active'); else row.classList.add('active');
+    }
+
+    function loadSessionToSidebar(uIndex, sIndex) {
+        window.event.stopPropagation();
+        const session = userData[uIndex].sessions[sIndex];
+        document.getElementById('target-start').value = session.start_time;
+        document.getElementById('target-stop').value = session.end_time || "";
+    }
+
+    /* ── Action Prompts (RESTORED TEXT) ── */
+
+    function promptOverride() {
+        const user = document.getElementById('target-user-ovr').value;
+        const start = document.getElementById('target-start').value;
+        const stop = document.getElementById('target-stop').value;
+        if(!user || !start) return showStatus("MISSING DATA", true);
+
+        const message = `Are you sure you want to update the timestamps for ${user}?\n\nSTART: ${start}\nEND: ${stop || "IN_PROGRESS"}`;
+        openModal("DB_OVERRIDE", message, "btn-confirm-yellow", executeOverride);
+    }
+
+    function promptAssignWage() {
+        const user = document.getElementById('target-user-fin').value;
+        const wage = document.getElementById('hourly-wage').value;
+        if(!user || !wage) return showStatus("MISSING DATA", true);
+
+        const message = `Are you sure you want to change the hourly wage for ${user} to $${wage}/hr?\n\nThis will affect future calculations for this user.`;
+        openModal("CHANGE_WAGE", message, "btn-confirm-yellow", executeAssignWage);
+    }
+
+    function promptPayout() {
+        const user = document.getElementById('target-user-fin').value;
+        if(!user) return showStatus("NO USER SELECTED", true);
+
+        const message = `Are you sure you want to execute a payout for ${user}?\n\nThis action will reset their unpaid balance to zero.`;
+        openModal("EXECUTE_PAYOUT", message, "btn-confirm-red", executePayout);
+    }
+
+    /* ── API Execution ── */
+
+    async function executeOverride() {
+        const payload = {
+            user: document.getElementById('target-user-ovr').value,
+            start: document.getElementById('target-start').value,
+            stop: document.getElementById('target-stop').value
+        };
+        try {
+            const res = await fetch('/api/admin/override', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+            if(res.ok) showStatus("OVERRIDE EXECUTED"); else showStatus("ERROR: REJECTED", true);
+        } catch(e) { showStatus("NETWORK FAILURE", true); }
+    }
+
+    async function executeAssignWage() {
+        const payload = {
+            username: document.getElementById('target-user-fin').value,
+            new_wage: parseFloat(document.getElementById('hourly-wage').value)
+        };
+        try {
+            const res = await fetch('/api/admin/set-wage', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+            if(res.ok) showStatus("WAGE UPDATED"); else showStatus("ERROR: REJECTED", true);
+        } catch(e) { showStatus("NETWORK FAILURE", true); }
+    }
+
+    async function executePayout() {
+        const payload = { username: document.getElementById('target-user-fin').value };
+        try {
+            const res = await fetch('/api/admin/payout', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+            if(res.ok) showStatus("PAYOUT SUCCESSFUL"); else showStatus("ERROR: REJECTED", true);
+        } catch(e) { showStatus("NETWORK FAILURE", true); }
+    }
+
+    function filterUsers() {
+        const query = document.getElementById('search-input').value.toLowerCase();
+        renderTable(userData.filter(u => u.username.toLowerCase().includes(query)));
+    }
+</script>
+</body>
+</html>
