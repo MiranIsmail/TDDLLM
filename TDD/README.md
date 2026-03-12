@@ -1,13 +1,22 @@
 # TDDLLM
 
 
-# Installation & Running the Application
 
 ## Prerequisites
 
 You need **Java 17+** and **Maven 3.8+**. The database is SQLite — no separate server needed,
-the file is created automatically on first run.
+the file is created automatically on first run. If you have Java and maven, you only need to read the recommendations part.
+---
 
+## Recommendations
+We **strongly** recommend that you use IntelliJ IDEA. This will make it easier to develop in Java.
+You can download the community version for free [here](https://www.jetbrains.com/idea/download/?section=linux).
+
+We recommend this extension to easier see what is in the database: [simplesqlitebrowser](https://plugins.jetbrains.com/plugin/19797-simplesqlitebrowser)
+
+If you still want to use VSCode we recommend the following extensions:
+- [Java by oracle](https://marketplace.visualstudio.com/items?itemName=Oracle.oracle-java)
+- [Java-pack](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack)
 ---
 
 ## 1 — Install Prerequisites
@@ -30,7 +39,7 @@ brew install openjdk@17 maven
 ```
 
 ### Windows
-
+We would prefer if you used IntelliJ IDEA since if you install it, you will get the opportunity to install Java at same time.This is the most hassle-free way to do this.
 1. Download and install **Java 17 JDK** from <https://adoptium.net>  
    During installation, tick "Set JAVA_HOME variable".
 2. Download **Maven** from <https://maven.apache.org/download.cgi>  
@@ -42,6 +51,7 @@ brew install openjdk@17 maven
    mvn -version
    ```
 
+   3.1 We recommend using Git Bash, so that you can run the shell files provided.
 ---
 
 ## 2 — Verify your install
@@ -102,7 +112,7 @@ chmod +x install_check.sh
 ---
 
 ## Notes
-
+- **NOTE! The LLM has contex about the repository already, you do not need to explain the structure and files to it**
 - The SQLite database file (`auth-experiment.db`) is created automatically in the working
   directory the first time you start the app. It is listed in `.gitignore` and will not be committed.
 - In test mode (`App.createApp(true)`) the database runs in-memory and is wiped between runs.

@@ -3,6 +3,10 @@
 Please answer all questions honestly. Your answers are anonymous and will only
 be used for research purposes.
 
+#### Please provide your given llm username (the one for llm.miranis.cc)
+
+**User name**: 
+
 ---
 
 <table>
