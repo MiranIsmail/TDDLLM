@@ -53,6 +53,7 @@
         .btn-modal { padding: 10px 20px; font-family: inherit; font-size: 11px; text-transform: uppercase; cursor: pointer; border-radius: 3px; font-weight: 600; transition: 0.2s; border: none; }
         .btn-confirm-red { background: var(--red); color: #000; }
         .btn-confirm-yellow { background: var(--yellow); color: #000; }
+        .btn-confirm-green { background: var(--accent); color: #000; }
         .btn-cancel { background: transparent; color: var(--text-main); border: 1px solid var(--border); }
         .btn-cancel:hover { background: var(--border); }
 
@@ -64,6 +65,7 @@
         .sidebar-section-title { font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
         .override-box { border: 1px dashed var(--yellow); padding: 15px; border-radius: 4px; display: flex; flex-direction: column; gap: 12px; }
         .finance-box { border: 1px dashed var(--red); padding: 15px; border-radius: 4px; display: flex; flex-direction: column; gap: 12px; }
+        .elevate-box { border: 1px dashed var(--accent); padding: 15px; border-radius: 4px; display: flex; flex-direction: column; gap: 12px; }
 
         .sidebar-field label { display: block; font-size: 9px; margin-bottom: 4px; color: var(--text-mid); }
         .sidebar-input { background: var(--bg); border: 1px solid var(--border); color: var(--text-main); padding: 10px; border-radius: 4px; font-family: inherit; font-size: 12px; outline: none; width: 100%; }
@@ -74,6 +76,7 @@
         .btn-action { border: none; padding: 12px; font-weight: 600; cursor: pointer; border-radius: 3px; text-transform: uppercase; font-size: 11px; width: 100%; transition: 0.2s; }
         .btn-yellow { background: var(--yellow); color: #000; }
         .btn-red { background: var(--red); color: #000; }
+        .btn-green { background: var(--accent); color: #000; }
 
         .table-container { border: 1px solid var(--border); background: var(--surface); border-radius: 4px; overflow: hidden; }
         table { width: 100%; border-collapse: collapse; font-size: 11px; }
@@ -147,6 +150,13 @@
             <button class="btn-action btn-yellow" style="margin-bottom: 5px;" onclick="promptAssignWage()">Assign Wage</button>
             <button class="btn-action btn-red" onclick="promptPayout()">Payout Balance →</button>
         </div>
+
+        <div class="elevate-box">
+            <div class="sidebar-section-title" style="color:var(--accent);">Elevate to Admin</div>
+            <div class="sidebar-field"><label>TARGET USER</label><input type="text" id="target-user-elevate" class="sidebar-input" readonly></div>
+            <button class="btn-action btn-green" onclick="promptElevate()">Elevate to Admin →</button>
+        </div>
+
         <div id="system-msg"></div>
     </nav>
 </div>
@@ -174,7 +184,7 @@
     function openModal(title, text, confirmClass, onConfirm) {
         const titleEl = document.getElementById('modal-title');
         titleEl.innerText = title;
-        titleEl.style.color = confirmClass.includes('yellow') ? 'var(--yellow)' : 'var(--red)';
+        titleEl.style.color = confirmClass.includes('yellow') ? 'var(--yellow)' : confirmClass.includes('green') ? 'var(--accent)' : 'var(--red)';
         document.getElementById('modal-text').innerText = text;
         const confirmBtn = document.getElementById('modal-confirm-btn');
         confirmBtn.className = `btn-modal ${confirmClass}`;
@@ -238,6 +248,7 @@
 
         document.getElementById('target-user-ovr').value = user.username;
         document.getElementById('target-user-fin').value = user.username;
+        document.getElementById('target-user-elevate').value = user.username;
         document.getElementById('hourly-wage').value = user.hourly_wage || "";
         document.getElementById('target-start').value = "";
         document.getElementById('target-stop').value = "";
@@ -253,7 +264,7 @@
         document.getElementById('target-stop').value = session.end_time || "";
     }
 
-    /* ── Action Prompts (RESTORED TEXT) ── */
+    /* ── Action Prompts ── */
 
     function promptOverride() {
         const user = document.getElementById('target-user-ovr').value;
@@ -280,6 +291,14 @@
 
         const message = `Are you sure you want to execute a payout for ${user}?\n\nThis action will reset their unpaid balance to zero.`;
         openModal("EXECUTE_PAYOUT", message, "btn-confirm-red", executePayout);
+    }
+
+    function promptElevate() {
+        const user = document.getElementById('target-user-elevate').value;
+        if(!user) return showStatus("NO USER SELECTED", true);
+
+        const message = `Are you sure you want to elevate ${user} to ADMIN role?\n\nThis action grants full administrative privileges.`;
+        openModal("ELEVATE_USER", message, "btn-confirm-green", executeElevate);
     }
 
     /* ── API Execution ── */
@@ -324,6 +343,18 @@
                 body: JSON.stringify(payload)
             });
             if(res.ok) showStatus("PAYOUT SUCCESSFUL"); else showStatus("ERROR: REJECTED", true);
+        } catch(e) { showStatus("NETWORK FAILURE", true); }
+    }
+
+    async function executeElevate() {
+        const payload = { username: document.getElementById('target-user-elevate').value };
+        try {
+            const res = await fetch('/api/admin/elevate', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+            if(res.ok) showStatus("USER ELEVATED TO ADMIN"); else showStatus("ERROR: REJECTED", true);
         } catch(e) { showStatus("NETWORK FAILURE", true); }
     }
 

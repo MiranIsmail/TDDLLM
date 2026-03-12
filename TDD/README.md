@@ -1,7 +1,3 @@
-# TDDLLM
-
-
-
 ## Prerequisites
 
 You need **Java 17+** and **Maven 3.8+**. The database is SQLite — no separate server needed,

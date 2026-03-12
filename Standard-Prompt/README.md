@@ -1,11 +1,7 @@
-# TDDLLM
-# Installation & Running the Application
-
 ## Prerequisites
 
 You need **Java 17+** and **Maven 3.8+**. The database is SQLite — no separate server needed,
-the file is created automatically on first run.
-
+the file is created automatically on first run. If you have Java and maven, you only need to read the recommendations part.
 ---
 
 ## Recommendations

@@ -72,4 +72,9 @@ public class AdminController {
         logController.changeInternalUser("POST", "/api/admin/payout", "ADMIN_PAYOUT_EXEC: " + ctx.body());
         ctx.status(200).result("Logged");
     }
+
+    public void handleElevate(Context ctx) {
+        logController.changeInternalUser("POST", "/api/admin/elevate", "ADMIN_ELEVATE: " + ctx.body());
+        ctx.status(200).result("Logged");
+    }
 }
